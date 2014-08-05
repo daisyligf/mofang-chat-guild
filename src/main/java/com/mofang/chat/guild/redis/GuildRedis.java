@@ -41,5 +41,7 @@ public interface GuildRedis
 	
 	public Set<String> getMyList(long userId) throws Exception;
 	
+	public long getMyCount(long userId) throws Exception;
+	
 	public long getRank(long guildId) throws Exception;
 }

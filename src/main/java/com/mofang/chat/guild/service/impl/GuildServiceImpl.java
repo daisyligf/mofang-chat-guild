@@ -634,6 +634,37 @@ public class GuildServiceImpl implements GuildService
 		}
 		return data;
 	}
+	
+	@Override
+	public JSONObject getGuildListCount(long userId) throws Exception
+	{
+	    // 缓存里有，直接返回
+	    String cacheKey = RedisKey.CACHE_GUILD_LIST_COUNT_KEY_PREFIX + "_" + userId;
+	    String result = resultCacheRedis.getCache(cacheKey);
+	    if(!StringUtil.isNullOrEmpty(result))
+	    {
+		JSONObject data = new JSONObject(result);
+		return data;
+	    }
+	    // 读取我的公会数量
+	    long myCount = guildRedis.getMyCount(userId);
+	    
+	    // 读取热门公会数量
+	    long hotCount = guildRedis.getHotCount();
+	    
+	    // 读取新锐公会数量
+	    long newCount = guildRedis.getNewCount();
+	    
+	    JSONObject data = new JSONObject();
+	    data.put("my_count", myCount);
+	    data.put("hot_count", hotCount);
+	    data.put("new_count", newCount);
+	    // 放入缓存
+	    resultCacheRedis.saveCache(cacheKey, data.toString(), GlobalConfig.GUILD_LIST_EXPIRE);
+	    
+	    return data;
+	    
+	}
 
 	@Override
 	public JSONObject getStatData(long guildId) throws Exception

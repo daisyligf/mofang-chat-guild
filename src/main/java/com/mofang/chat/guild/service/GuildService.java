@@ -26,5 +26,7 @@ public interface GuildService
 	
 	public JSONArray getMyGuildList(long userId) throws Exception;
 	
+	public JSONObject getGuildListCount(long userId) throws Exception;
+	
 	public JSONObject getStatData(long guildId) throws Exception;
 }

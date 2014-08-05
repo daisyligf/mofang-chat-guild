@@ -30,6 +30,8 @@ public interface GuildLogic
 	
 	public ResultValue getMyList(HttpRequestContext context) throws Exception;
 	
+	public ResultValue getListCount(HttpRequestContext context) throws Exception;
+	
 	public ResultValue search(HttpRequestContext context) throws Exception;
 	
 	public ResultValue getStatData(HttpRequestContext context) throws Exception;

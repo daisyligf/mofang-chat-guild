@@ -351,6 +351,21 @@ public class GuildRedisImpl implements GuildRedis
 		};
 		return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
+	
+	@Override
+	public long getMyCount(final long userId) throws Exception 
+	{
+	    	RedisWorker<Long> worker = new RedisWorker<Long>()
+	    	{
+	    	    @Override
+	    	    public Long execute(Jedis jedis) throws Exception
+	    	    {
+	    		String key = RedisKey.MY_GUILD_LIST_KEY_PREFIX + userId;
+	    		return jedis.zcard(key);
+	    	    }
+	    	};
+	    	return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+	}
 
 	@Override
 	public long getRank(final long guildId) throws Exception

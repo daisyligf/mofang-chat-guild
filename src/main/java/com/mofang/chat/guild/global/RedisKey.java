@@ -152,6 +152,12 @@ public class RedisKey
 	public final static String CACHE_MY_GUILD_LIST_KEY_PREFIX = "cache_my_guild_list_";
 	
 	/**
+	 * 公会列表数结果缓存key前缀
+	 * 结构：cache_guild_list_count_{userid}
+	 */
+	public final static String CACHE_GUILD_LIST_COUNT_KEY_PREFIX = "cache_guild_list_count_";
+	
+	/**
 	 * 游戏公会列表结果缓存key前缀
 	 * 结构: cache_game_guild_list_{gameid}
 	 */

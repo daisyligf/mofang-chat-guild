@@ -634,6 +634,37 @@ public class GuildLogicImpl implements GuildLogic
 			throw new Exception("at GuildLogicImpl.getMyList throw an error.", e);
 		}
 	}
+	
+	@Override
+	public ResultValue getListCount(HttpRequestContext context) throws Exception
+	{
+	    ResultValue result = new ResultValue();
+	    String uidString = context.getParameters("uid");
+	    if(!StringUtil.isLong(uidString))
+	    {
+		result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+		result.setMessage("参数无效");
+		return result;
+	    }
+	    
+	    try
+	    {
+		// 获取公会列表数
+		long userId = Long.parseLong(uidString);
+		JSONObject data = guildService.getGuildListCount(userId);
+		
+		// 返回结果
+		result.setCode(ReturnCode.SUCCESS);
+		result.setMessage("OK");
+		result.setData(data);
+		return result;
+		
+	    }
+	    catch(Exception e)
+	    {
+		throw new Exception("at GuildLogicImpl.getListCount throw an error.", e);
+	    }
+	}
 
 	@Override
 	public ResultValue search(HttpRequestContext context) throws Exception
