@@ -2,6 +2,8 @@ package com.mofang.chat.guild.logic.impl;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -78,12 +80,21 @@ public class GuildLogicImpl implements GuildLogic
 		{
 			long userId = Long.parseLong(uidString);
 			long createCount = guildDao.getCreateCount(userId);
-			if(createCount >= GlobalConfig.MAX_CREATE_GUILD_COUNT)
-			{
-				result.setCode(ReturnCode.USER_CAN_NOT_CREATE_GUILD);
-				result.setMessage("您的公会已到达创建上限");
-				return result;
-			}
+			Lock lock = new ReentrantLock();
+		    	lock.lock();
+		    	try
+		    	{
+        			if(createCount >= GlobalConfig.MAX_CREATE_GUILD_COUNT)
+        			{
+        				result.setCode(ReturnCode.USER_CAN_NOT_CREATE_GUILD);
+        				result.setMessage("您的公会已到达创建上限");
+        				return result;
+        			}
+		    	}
+		    	finally
+		    	{
+		    	    lock.unlock();
+		    	}
 			
 			JSONObject json = new JSONObject(postData);
 			String guildName = json.optString("name", "");
@@ -105,11 +116,20 @@ public class GuildLogicImpl implements GuildLogic
 			String notice = json.optString("notice", "");
 			String background = json.optString("background", "");
 			JSONArray games = json.getJSONArray("game_ids");
-			if(null != games && games.length() > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
+			
+			lock.lock();
+			try
 			{
-				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
-				result.setMessage("超过公会关联游戏最大数");
-				return result;
+        			if(null != games && games.length() > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
+        			{
+        				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
+        				result.setMessage("超过公会关联游戏最大数");
+        				return result;
+        			}
+			}
+			finally
+			{
+			    lock.unlock();
 			}
 			
 			///构建公会信息
@@ -144,7 +164,7 @@ public class GuildLogicImpl implements GuildLogic
 		catch(Exception e)
 		{
 			throw new Exception("at GuildLogicImpl.create throw an error.", e);
-		}
+		} 
 	}
 
 	@Override

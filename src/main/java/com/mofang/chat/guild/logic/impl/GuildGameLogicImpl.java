@@ -1,6 +1,8 @@
 package com.mofang.chat.guild.logic.impl;
 
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -99,11 +101,21 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			int delCount = delGameIds.length();
 			int gameCount = (int)guildGameRedis.getGameCountByGuild(guildId);
 			int total = addCount - delCount + gameCount;
-			if(total > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
+			
+			Lock lock = new ReentrantLock();
+			lock.lock();
+			try
 			{
-				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
-				result.setMessage("超过公会关联游戏最大数");
-				return result;
+        			if(total > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
+        			{
+        				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
+        				result.setMessage("超过公会关联游戏最大数");
+        				return result;
+        			}
+			} 
+			finally
+			{
+			    lock.unlock();
 			}
 			
 			///执行异步编辑公会游戏操作
