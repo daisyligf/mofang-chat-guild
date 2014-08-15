@@ -21,4 +21,6 @@ public interface GuildUserLogic
 	public ResultValue changeRole(HttpRequestContext context) throws Exception;
 	
 	public ResultValue getList(HttpRequestContext context) throws Exception;
+	
+	public ResultValue userExists (HttpRequestContext context) throws Exception;
 }

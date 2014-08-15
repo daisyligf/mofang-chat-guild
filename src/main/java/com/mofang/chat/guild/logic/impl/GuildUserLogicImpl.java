@@ -569,4 +569,45 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			throw new Exception("at GuildUserLogicImpl.hasAdminPrivilege throw an error.", e);
 		}
 	}
+	
+	public ResultValue userExists(HttpRequestContext context) throws Exception
+	{
+	    ResultValue result = new ResultValue();
+	    try {
+		String uidString = context.getParameters("uid");
+		if(!StringUtil.isLong(uidString))
+		{
+			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+			result.setMessage("参数无效");
+			return result;
+		}
+		    
+        	String postData = context.getPostData();
+        	if(StringUtil.isNullOrEmpty(postData))
+        	{
+        		result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+        		return result;
+        	}
+        	JSONObject json = new JSONObject(postData);
+        	long guildId = json.optLong("guild_id", 0L);
+        	long userId = Long.parseLong(uidString);
+        	boolean exists = guildUserRedis.exists(guildId, userId);
+        	JSONObject data = new JSONObject();
+        	if (exists)
+        	{
+        	    data.put("exists", 1);
+        	} else
+        	{
+        	    data.put("exists", 0);
+        	}
+        	result.setCode(ReturnCode.SUCCESS);
+        	result.setMessage("OK");
+        	result.setData(data);
+        	return result;
+	    }
+	    catch(Exception e)
+	    {
+		throw new Exception("at GuildUserLogicImpl.userExists throw an error.", e);
+	    }
+	}
 }
