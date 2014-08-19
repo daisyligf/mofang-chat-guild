@@ -96,4 +96,6 @@ public class GlobalConfig
 	public static String GUILD_UNLOGIN_MEMBER_COUNT_7DAYS_CLEAR_TASK_TIME;
 	
 	public static String GUILD_UNLOGIN_MEMBER_COUNT_30DAYS_CLEAR_TASK_TIME;
+	
+	public static String SENSITIVE_WORDS_SERVICE_URL;
 }

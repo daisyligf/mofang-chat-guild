@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import com.mofang.chat.guild.component.GiftComponent;
 import com.mofang.chat.guild.component.SearchComponent;
+import com.mofang.chat.guild.component.SensitiveWordsComponent;
 import com.mofang.chat.guild.global.GlobalConfig;
 import com.mofang.chat.guild.global.ResultValue;
 import com.mofang.chat.guild.global.ReturnCode;
@@ -104,6 +105,7 @@ public class GuildLogicImpl implements GuildLogic
 				result.setMessage("请输入公会名称");
 				return result;
 			}
+			
 			String avatar = json.optString("avatar", "");
 			if(StringUtil.isNullOrEmpty(avatar))
 			{
@@ -131,6 +133,12 @@ public class GuildLogicImpl implements GuildLogic
 			{
 			    lock.unlock();
 			}
+			// 对公会名称、宣言、公告进行敏感词过滤
+			// guildName,intro,notice
+			guildName = SensitiveWordsComponent.filter(guildName);
+			intro = SensitiveWordsComponent.filter(intro);
+			notice = SensitiveWordsComponent.filter(notice);
+			guildNamePrefix = SensitiveWordsComponent.filter(guildNamePrefix);
 			
 			///构建公会信息
 			long guildId = guildRedis.getMaxId();
@@ -225,6 +233,12 @@ public class GuildLogicImpl implements GuildLogic
 			String intro = json.optString("intro", "");
 			String notice = json.optString("notice", "");
 			String background = json.optString("background", "");
+			
+			// 对公会宣言、公告进行敏感词过滤
+			// intro，notice
+			intro = SensitiveWordsComponent.filter(intro);
+			notice = SensitiveWordsComponent.filter(notice);
+			guildNamePrefix = SensitiveWordsComponent.filter(guildNamePrefix);
 			
 			model.setAvatar(avatar);
 			model.setGuildNamePrefix(guildNamePrefix);

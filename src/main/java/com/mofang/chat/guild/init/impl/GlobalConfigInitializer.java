@@ -37,6 +37,7 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		GlobalConfig.HTTP_CLIENT_API_CONFIG_PATH = config.get("conf", "http_client_api_config_path");
 		GlobalConfig.HTTP_CLIENT_CHATSERVICE_CONFIG_PATH = config.get("conf", "http_client_chatservice_config_path");
 		
+		
 		GlobalConfig.GUILD_ID_START = Long.parseLong(config.get("logic", "guild_id_start"));
 		GlobalConfig.GUILD_GROUP_ID_START = Long.parseLong(config.get("logic", "guild_group_id_start"));
 		GlobalConfig.MAX_CREATE_GUILD_COUNT = config.getInt("logic", "max_create_guild_count");
@@ -63,6 +64,7 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		GlobalConfig.GUILD_CHECKIN_NUM_URL = config.get("api", "guild_checkin_num_url");
 		GlobalConfig.SOLR_URL = config.get("api", "solr_url");
 		GlobalConfig.CHAT_SERVICE_URL = config.get("api", "chat_service_url");
+		GlobalConfig.SENSITIVE_WORDS_SERVICE_URL = config.get("api", "sensitive_words_service_url");
 		
 		GlobalConfig.GUILD_CHECK_DAYS = config.getInt("task", "guild_check_days");
 		GlobalConfig.GUILD_MIN_MEMBER_COUNT = config.getInt("task", "guild_min_member_count");
