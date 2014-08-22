@@ -24,4 +24,6 @@ public interface GuildDao
 	public long getCreateCount(long userId) throws Exception;
 	
 	public List<Long> getDismissGuildIds(String dateAgo, int minMemberCount) throws Exception;
+	
+	public List<Long> getInactiveGuildIds(String date, int minMemberCount) throws Exception;
 }

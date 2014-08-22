@@ -107,4 +107,25 @@ public class GuildDaoImpl extends AbstractMysqlSupport<Guild> implements GuildDa
 			list.add(row.getLong(0));
 		return list;
 	}
+	
+	public List<Long> getInactiveGuildIds(String date, int minMemberCount) throws Exception
+	{
+	    	StringBuilder strSql = new StringBuilder();
+	    	strSql.append("select a.guild_id from (select guild_id from guild ");
+	    	strSql.append("where date_format(create_time, '%Y-%m-%d') = '").append(date);
+	    	strSql.append("') a inner join (select a.guild_id, count(a.user_id) from guild_user a ");
+	    	strSql.append("group by guild_id having count(user_id) < ").append(minMemberCount);
+	    	strSql.append(") b on a.guild_id = b.guild_id ");
+	    	ResultData data = super.executeQuery(strSql.toString());
+	    	if (null == data)
+	    	    return null;
+	    	List<RowData> rows = data.getQueryResult();
+	    	if (null == rows || rows.size() == 0)
+	    	    return null;
+
+	    	List<Long> list = new ArrayList<Long>();
+	    	for (RowData row : rows)
+	    	    list.add(row.getLong(0));
+	    	return list;
+    }
 }

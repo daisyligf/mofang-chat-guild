@@ -67,6 +67,8 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		GlobalConfig.SENSITIVE_WORDS_SERVICE_URL = config.get("api", "sensitive_words_service_url");
 		
 		GlobalConfig.GUILD_CHECK_DAYS = config.getInt("task", "guild_check_days");
+		GlobalConfig.GUILD_FIRST_ALARM_DAYS = config.getInt("task", "guild_first_alarm_days");
+		GlobalConfig.GUILD_SECOND_ALARM_DAYS = config.getInt("task", "guild_second_alarm_days");
 		GlobalConfig.GUILD_MIN_MEMBER_COUNT = config.getInt("task", "guild_min_member_count");
 		GlobalConfig.HOT_GUILD_RANK_MEMBER_RATE = config.getFloat("task", "hot_guild_rank_member_rate");
 		GlobalConfig.HOT_GUILD_RANK_MARK_RATE = config.getFloat("task", "hot_guild_rank_makr_rate");

@@ -81,6 +81,10 @@ public class GlobalConfig
 	
 	public static int GUILD_CHECK_DAYS ;
 	
+	public static int GUILD_FIRST_ALARM_DAYS;
+	
+	public static int GUILD_SECOND_ALARM_DAYS;
+	
 	public static int GUILD_MIN_MEMBER_COUNT;
 	
 	public static double HOT_GUILD_RANK_MEMBER_RATE;

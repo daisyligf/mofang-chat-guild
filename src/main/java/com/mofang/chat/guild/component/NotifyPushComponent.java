@@ -386,6 +386,38 @@ public class NotifyPushComponent
 		PUSH_EXECUTOR.execute(task);
 	}
 	
+	public static void beforeDismiss(final Guild guild, final int type) throws Exception 
+	{
+	    	Runnable task = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+			    try {
+				String title = "大人，您的公会人太少啦";
+				String detail = "";
+				if (type == 1) {
+				    detail = "会长大人，今天是您公会成立的第10天，但您的公会成员还没有达到10人，加油拉人啊~";
+				} else if (type == 2) {
+				    detail = "会长大人，今天是您公会成立的第13天，但您的公会成员还没有达到10人，加油拉人啊，再过两天，如果还未达到10人，公会就要关门大吉啦~~~";
+				}
+				long userId = guild.getCreatorId();
+				List<Long> userIdList = new ArrayList<Long>();
+				userIdList.add(userId);
+				String msgCategory = "before_dismiss";
+				    
+				pushNotify(userIdList, msgCategory, title, detail, null);
+			    }
+			    catch(Exception e) 
+			    {
+			    	GlobalObject.ERROR_LOG.error("at NotifyPushComponent.beforeDismiss throw an error.", e);
+			    }
+
+			}
+		};
+		PUSH_EXECUTOR.execute(task);
+	}
+	
 	private static void pushNotify(List<Long> userIdList, String msgCategory, String title, String detail, JSONObject source) throws Exception
 	{
 		JSONArray uids = new JSONArray(userIdList);
