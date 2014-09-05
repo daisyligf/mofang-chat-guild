@@ -1,5 +1,7 @@
 package com.mofang.chat.guild.mysql;
 
+import java.util.List;
+
 import com.mofang.chat.guild.model.GuildRecruit;
 
 /**
@@ -20,4 +22,6 @@ public interface GuildRecruitDao
 	public void deleteByGuild(long guildId) throws Exception;
 	
 	public GuildRecruit getInfo(int recruitId) throws Exception;
+	
+	public List<GuildRecruit> getList(long guildId, int status) throws Exception;
 }

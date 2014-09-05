@@ -136,6 +136,7 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 			JSONObject json = new JSONObject(postData);
 			int auditType = json.optInt("audit_type", 0);
 			int guildId = json.optInt("guild_id", 0);
+			int recruitId = json.optInt("recruit_id", 0);
 			if(0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
@@ -143,8 +144,15 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 				return result;
 			}
 			
+			if (0L == recruitId)
+			{
+			    	result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+				result.setMessage("招募信息ID无效");
+				return result;
+			}
+			
 			///更新公会招募信息状态
-			guildRecruitDao.updateStatusByGuild(guildId, auditType);
+			guildRecruitDao.updateStatus(recruitId, auditType);
 			if(auditType == GuildRecruitStatus.NORMAL)
 			{
 				guildRecruitRedis.addAuditList(guildId, System.currentTimeMillis());

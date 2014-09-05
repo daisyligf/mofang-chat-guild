@@ -1,5 +1,6 @@
 package com.mofang.chat.guild.mysql;
 
+import java.util.Date;
 import java.util.List;
 
 import com.mofang.chat.guild.model.Guild;
@@ -21,9 +22,11 @@ public interface GuildDao
 	
 	public Guild getInfo(long guildId) throws Exception;
 	
-	public long getCreateCount(long userId) throws Exception;
+	public long getCreatedCount(long userId) throws Exception;
 	
 	public List<Long> getDismissGuildIds(String dateAgo, int minMemberCount) throws Exception;
 	
 	public List<Long> getInactiveGuildIds(String date, int minMemberCount) throws Exception;
+	
+	public void updateDismissTime(long guildId, String date) throws Exception;
 }

@@ -15,6 +15,7 @@ import com.mofang.chat.guild.component.GiftComponent;
 import com.mofang.chat.guild.component.SearchComponent;
 import com.mofang.chat.guild.component.SensitiveWordsComponent;
 import com.mofang.chat.guild.global.GlobalConfig;
+import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.global.ResultValue;
 import com.mofang.chat.guild.global.ReturnCode;
 import com.mofang.chat.guild.global.common.GuildInformStatus;
@@ -50,6 +51,8 @@ public class GuildLogicImpl implements GuildLogic
 	private GuildInformDao guildInformDao = GuildInformDaoImpl.getInstance();
 	private GuildService guildService = GuildServiceImpl.getInstance();
 	
+	private ReentrantLock lock = new ReentrantLock();
+	
 	private GuildLogicImpl()
 	{}
 	
@@ -80,24 +83,9 @@ public class GuildLogicImpl implements GuildLogic
 		try
 		{
 			long userId = Long.parseLong(uidString);
-			long createCount = guildDao.getCreateCount(userId);
-			Lock lock = new ReentrantLock();
-		    	lock.lock();
-		    	try
-		    	{
-        			if(createCount >= GlobalConfig.MAX_CREATE_GUILD_COUNT)
-        			{
-        				result.setCode(ReturnCode.USER_CAN_NOT_CREATE_GUILD);
-        				result.setMessage("您的公会已到达创建上限");
-        				return result;
-        			}
-		    	}
-		    	finally
-		    	{
-		    	    lock.unlock();
-		    	}
 			
 			JSONObject json = new JSONObject(postData);
+			GlobalObject.INFO_LOG.info("create Json:" + json);
 			String guildName = json.optString("name", "");
 			if(StringUtil.isNullOrEmpty(guildName))
 			{
@@ -119,20 +107,12 @@ public class GuildLogicImpl implements GuildLogic
 			String background = json.optString("background", "");
 			JSONArray games = json.getJSONArray("game_ids");
 			
-			lock.lock();
-			try
-			{
-        			if(null != games && games.length() > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
-        			{
-        				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
-        				result.setMessage("超过公会关联游戏最大数");
-        				return result;
-        			}
-			}
-			finally
-			{
-			    lock.unlock();
-			}
+    			if(null != games && games.length() > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
+    			{
+    				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
+    				result.setMessage("超过公会关联游戏最大数");
+    				return result;
+    			}
 			// 对公会名称、宣言、公告进行敏感词过滤
 			// guildName,intro,notice
 			guildName = SensitiveWordsComponent.filter(guildName);
@@ -148,6 +128,9 @@ public class GuildLogicImpl implements GuildLogic
 			model.setAvatar(avatar);
 			model.setGuildNamePrefix(guildNamePrefix);
 			model.setIntro(intro);
+		
+			
+			
 			model.setNotice(notice);
 			model.setBackground(background);
 			model.setLevel(1);
@@ -158,12 +141,29 @@ public class GuildLogicImpl implements GuildLogic
 			model.setNewSeq(0L);
 			model.setCreateTime(new Date());
 			
-			///保存公会
-			guildService.create(model, games);
+			GlobalObject.INFO_LOG.info("model values---name:" + guildName  + ",avatar:" + avatar + ",guildNamePrefix:" + guildNamePrefix);
+			lock.lock();
+			try 
+			{
+			    long createdCount = guildDao.getCreatedCount(userId);
+			    if (createdCount >= GlobalConfig.MAX_CREATE_GUILD_COUNT) 
+			    {
+				result.setCode(ReturnCode.USER_CAN_NOT_CREATE_GUILD);
+				result.setMessage("您的公会已到达创建上限");
+				return result;
+			    }
+			    // /保存公会
+			    guildService.create(model, games);
+			}
+			finally 
+			{
+			    lock.unlock();
+			}
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
 			result.setMessage("OK");
+			
 			JSONObject data = new JSONObject();
 			data.put("guild_id", guildId);
 			result.setData(data);
@@ -172,7 +172,7 @@ public class GuildLogicImpl implements GuildLogic
 		catch(Exception e)
 		{
 			throw new Exception("at GuildLogicImpl.create throw an error.", e);
-		} 
+		}
 	}
 
 	@Override
@@ -376,6 +376,8 @@ public class GuildLogicImpl implements GuildLogic
 			
 			///删除公会
 			guildService.delete(model, GuildStatus.DISMISS, 1);
+			// 记录解散时间
+			guildService.updateDismissTime(guildId);
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);

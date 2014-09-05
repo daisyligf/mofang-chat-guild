@@ -71,7 +71,7 @@ public class GuildDaoImpl extends AbstractMysqlSupport<Guild> implements GuildDa
 	}
 
 	@Override
-	public long getCreateCount(long userId) throws Exception 
+	public long getCreatedCount(long userId) throws Exception 
 	{
 		Operand where = new WhereOperand();
 		Operand equal = new EqualOperand("creator_id", userId);
@@ -127,5 +127,13 @@ public class GuildDaoImpl extends AbstractMysqlSupport<Guild> implements GuildDa
 	    	for (RowData row : rows)
 	    	    list.add(row.getLong(0));
 	    	return list;
-    }
+	}
+	
+	public void updateDismissTime(long guildId, String date) throws Exception
+	{
+	    	StringBuilder strSql = new StringBuilder();
+	    	strSql.append("update guild set dismiss_time = '").append(date);
+	    	strSql.append("'").append(" where guild_id = ").append(guildId);
+	    	super.execute(strSql.toString());
+	}
 }

@@ -1,5 +1,7 @@
 package com.mofang.chat.guild.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -23,6 +25,7 @@ import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.global.RedisKey;
 import com.mofang.chat.guild.global.common.GuildGroupType;
 import com.mofang.chat.guild.global.common.GuildListType;
+import com.mofang.chat.guild.global.common.GuildRecruitStatus;
 import com.mofang.chat.guild.global.common.GuildUpDownType;
 import com.mofang.chat.guild.global.common.GuildUserRole;
 import com.mofang.chat.guild.global.common.GuildUserStatus;
@@ -30,6 +33,7 @@ import com.mofang.chat.guild.model.Guild;
 import com.mofang.chat.guild.model.GuildGame;
 import com.mofang.chat.guild.model.GuildGroup;
 import com.mofang.chat.guild.model.GuildGroupUser;
+import com.mofang.chat.guild.model.GuildRecruit;
 import com.mofang.chat.guild.model.GuildUser;
 import com.mofang.chat.guild.mysql.GuildDao;
 import com.mofang.chat.guild.mysql.GuildGameDao;
@@ -418,6 +422,15 @@ public class GuildServiceImpl implements GuildService
 		data.put("mark_count", markCount);
 		data.put("role", 0);
 		
+		// 最新一条已通过的招募信息
+		String content = "";
+		List<GuildRecruit> recruitMsgs = guildRecruitDao.getList(guildId, GuildRecruitStatus.NORMAL);
+		if (recruitMsgs != null && recruitMsgs.size() > 0) 
+		{
+		    content = recruitMsgs.get(0).getContent();
+		}
+		data.put("recruit_msg", content);
+		
 		///获取会长信息
 		JSONObject chairman = new JSONObject();
 		chairman.put("uid", model.getCreatorId());
@@ -713,5 +726,18 @@ public class GuildServiceImpl implements GuildService
 		appBean.addField("background", model.getBackground());
 		appBean.addField("game_list", gameList);
 		return appBean;
+	}
+	
+	public void updateDismissTime(long guildId) throws Exception {
+	    try {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String date = dateFormat.format(new Date());
+		guildDao.updateDismissTime(guildId, date);
+	    } catch(Exception e)
+		{
+		GlobalObject.ERROR_LOG.error("at GuildServiceImpl.updateDismissTime throw an error.", e);
+		throw e;
+		}
+	    
 	}
 }

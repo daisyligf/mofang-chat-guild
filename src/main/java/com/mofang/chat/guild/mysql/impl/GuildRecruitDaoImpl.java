@@ -1,12 +1,18 @@
 package com.mofang.chat.guild.mysql.impl;
 
+import java.util.List;
+
 import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.model.GuildRecruit;
 import com.mofang.chat.guild.mysql.GuildRecruitDao;
 import com.mofang.framework.data.mysql.AbstractMysqlSupport;
+import com.mofang.framework.data.mysql.core.criterion.operand.AndOperand;
 import com.mofang.framework.data.mysql.core.criterion.operand.EqualOperand;
 import com.mofang.framework.data.mysql.core.criterion.operand.Operand;
+import com.mofang.framework.data.mysql.core.criterion.operand.OrderByEntry;
+import com.mofang.framework.data.mysql.core.criterion.operand.OrderByOperand;
 import com.mofang.framework.data.mysql.core.criterion.operand.WhereOperand;
+import com.mofang.framework.data.mysql.core.criterion.type.SortType;
 
 /**
  * 
@@ -77,5 +83,20 @@ public class GuildRecruitDaoImpl extends AbstractMysqlSupport<GuildRecruit> impl
 	public GuildRecruit getInfo(int recruitId) throws Exception
 	{
 		return super.getByPrimaryKey(recruitId);
+	}
+	
+	@Override
+	public List<GuildRecruit> getList(long guildId, int status) throws Exception
+	{	
+	    	Operand where = new WhereOperand();
+	    	Operand guildIdEqual = new EqualOperand("guild_id", guildId);
+	    	Operand and = new AndOperand();
+	    	Operand statusEqual = new EqualOperand("status", status);
+	    	Operand order = new OrderByOperand(new OrderByEntry("audit_time", SortType.Desc));
+	    	where.append(guildIdEqual);
+	    	where.append(and);
+	    	where.append(statusEqual);
+	    	where.append(order);
+		return super.getList(where);
 	}
 }

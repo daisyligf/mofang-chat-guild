@@ -34,6 +34,8 @@ public class GuildGameLogicImpl implements GuildGameLogic
 	
 	private GuildGameService guildGameService = GuildGameServiceImpl.getInstance();
 	
+	private Lock lock = new ReentrantLock();
+	
 	private GuildGameLogicImpl()
 	{}
 	
@@ -102,7 +104,6 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			int gameCount = (int)guildGameRedis.getGameCountByGuild(guildId);
 			int total = addCount - delCount + gameCount;
 			
-			Lock lock = new ReentrantLock();
 			lock.lock();
 			try
 			{
@@ -112,15 +113,14 @@ public class GuildGameLogicImpl implements GuildGameLogic
         				result.setMessage("超过公会关联游戏最大数");
         				return result;
         			}
+			
+        			///执行异步编辑公会游戏操作
+        			guildGameService.edit(guildId, guild.getGuildName(), userId, addGameIds, delGameIds);
 			} 
 			finally
 			{
 			    lock.unlock();
 			}
-			
-			///执行异步编辑公会游戏操作
-			guildGameService.edit(guildId, guild.getGuildName(), userId, addGameIds, delGameIds);
-			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
 			result.setMessage("OK");

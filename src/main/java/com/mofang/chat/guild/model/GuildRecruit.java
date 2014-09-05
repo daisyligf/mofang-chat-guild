@@ -20,7 +20,7 @@ public class GuildRecruit
 {
 	@AutoIncrement
 	@PrimaryKey
-	@ColumnName(name="recurit_id")
+	@ColumnName(name="recruit_id")
 	private Integer recruitId;
 	@ColumnName(name="guild_id")
 	private Long guildId;

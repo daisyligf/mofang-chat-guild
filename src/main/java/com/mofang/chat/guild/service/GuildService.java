@@ -29,4 +29,6 @@ public interface GuildService
 	public JSONObject getGuildListCount(long userId) throws Exception;
 	
 	public JSONObject getStatData(long guildId) throws Exception;
+	
+	public void updateDismissTime(long guildId) throws Exception;
 }

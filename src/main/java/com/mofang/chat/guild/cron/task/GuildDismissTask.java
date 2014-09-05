@@ -49,6 +49,7 @@ public class GuildDismissTask implements Runnable
         				if(null == guildInfo)
         					continue;
         				guildService.delete(guildInfo, GuildStatus.DISMISS, 2);
+        				guildService.updateDismissTime(guildId);
         			}
 			}
 			
