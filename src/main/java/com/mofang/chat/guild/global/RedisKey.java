@@ -196,4 +196,9 @@ public class RedisKey
 	 * 例如 hset guild_unlogin_member_count_30days 1000002 10
 	 */
 	public final static String GUILD_UNLOGIN_MEMBER_COUNT_30DAYS_KEY = "guild_unlogin_member_count_30days";
+	
+	/**
+	 * 用户最近依次退出公会时间记录列表
+	 */
+	public final static String GUILD_USER_QUIT_TIME_LIST_KEY = "guild_user_quit_time_list";
 }

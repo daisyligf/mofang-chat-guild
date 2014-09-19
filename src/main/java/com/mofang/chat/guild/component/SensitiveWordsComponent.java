@@ -1,5 +1,7 @@
 package com.mofang.chat.guild.component;
 
+import java.net.URLEncoder;
+
 import org.json.JSONObject;
 
 import com.mofang.chat.guild.global.GlobalConfig;
@@ -15,18 +17,22 @@ public class SensitiveWordsComponent
 {
     public static String filter(String words)
     {
-	String url = GlobalConfig.SENSITIVE_WORDS_SERVICE_URL + words;
 	try 
 	{
-	    String result = HttpClientSender.get(GlobalObject.HTTP_CLIENT_API,
-		    url);
+	    long start = System.currentTimeMillis();
+	    String url = GlobalConfig.SENSITIVE_WORDS_SERVICE_URL + URLEncoder.encode(words, "UTF-8");
+	    String result = HttpClientSender.get(GlobalObject.HTTP_CLIENT_API, url);
 	    JSONObject json = new JSONObject(result);
 	    String after = json.optString("out", "");
+	    long end = System.currentTimeMillis();
+	    GlobalObject.INFO_LOG.info("SENSITIVE_WORDS_SERVICE_URL costs time " + (end - start) + " ms");
+	    GlobalObject.INFO_LOG.info("at SensitiveWordsComponent.filter before:" + words + ",after:" + after);
 	    return after;
-	} 
+	}
 	catch (Exception e) 
 	{
-	    return "";
+	    GlobalObject.ERROR_LOG.error("at SensitiveWordsComponent.filter throw an error.", e);
+	    return words;
 	}
     }
 }

@@ -481,4 +481,41 @@ public class GuildUserRedisImpl implements GuildUserRedis
 		};
 		return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
+	
+	@Override
+	public boolean saveUserLastQuitGuild(final long userId) throws Exception
+	{
+	    RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+	    {
+			@Override
+        		public Boolean execute(Jedis jedis) throws Exception
+        		{
+			    String key = RedisKey.GUILD_USER_QUIT_TIME_LIST_KEY;
+			    long quitTime = System.currentTimeMillis();
+			    jedis.hset(key, userId + "", quitTime + "");
+			    return true;
+        		}
+	    };
+	    return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public long getUserLastQuitGuild(final long userId) throws Exception
+	{
+	    RedisWorker<Long> worker = new RedisWorker<Long>()
+	    {
+			@Override
+        		public Long execute(Jedis jedis) throws Exception
+        		{
+        		    String key = RedisKey.GUILD_USER_QUIT_TIME_LIST_KEY;
+        		    if (jedis.hexists(key, userId + "")) {
+        			long quitTime = Long.parseLong(jedis.hget(key, userId + ""));
+        			return quitTime;
+        		    } 
+        		    return 0L;
+        		}
+	    };
+	    return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+	}
+	
 }

@@ -15,6 +15,7 @@ import com.mofang.chat.guild.redis.GuildRedis;
 import com.mofang.chat.guild.redis.GuildUserRedis;
 import com.mofang.chat.guild.redis.ResultCacheRedis;
 import com.mofang.framework.data.redis.RedisWorker;
+import com.mofang.framework.data.redis.workers.DeleteWorker;
 import com.mofang.framework.data.redis.workers.GetWorker;
 import com.mofang.framework.data.redis.workers.IncrWorker;
 import com.mofang.framework.data.redis.workers.SetWorker;
@@ -76,7 +77,7 @@ public class GuildRedisImpl implements GuildRedis
 			public Boolean execute(Jedis jedis) throws Exception
 			{
 				String infoKey = RedisKey.GUILD_INFO_KEY_PREFIX + model.getGuildId();
-				String newListKey = RedisKey.GUILD_NEW_LIST_KEY;
+//				String newListKey = RedisKey.GUILD_NEW_LIST_KEY;
 				String hotListKey = RedisKey.GUILD_HOT_LIST_KEY;
 				
 				///将公会信息添加到redis中
@@ -84,7 +85,7 @@ public class GuildRedisImpl implements GuildRedis
 				jedis.set(infoKey, json.toString());
 				
 				///将公会ID添加到最新公会列表中
-				jedis.zadd(newListKey, model.getCreateTime().getTime(), model.getGuildId().toString());
+//				jedis.zadd(newListKey, model.getCreateTime().getTime(), model.getGuildId().toString());
 				
 				///将公会ID添加到最热公会列表中
 				jedis.zadd(hotListKey, model.getHot(), model.getGuildId().toString());
@@ -335,6 +336,32 @@ public class GuildRedisImpl implements GuildRedis
 			}
 		};
 		return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public boolean addToNewList(final Guild guild) throws Exception
+	{
+	    	RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+		{
+			@Override
+			public Boolean execute(Jedis jedis) throws Exception
+			{
+				String key = RedisKey.GUILD_NEW_LIST_KEY;
+				double score = guild.getCreateTime().getTime() + guild.getNewSeq();
+				jedis.zadd(key, score, guild.getGuildId().toString());
+				return true;
+			}
+		};
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+			
+	}
+	
+	@Override
+	public boolean clearNewList() throws Exception
+	{
+		String key = RedisKey.GUILD_NEW_LIST_KEY;
+		RedisWorker<Boolean> worker = new DeleteWorker(key);
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
 	}
 
 	@Override

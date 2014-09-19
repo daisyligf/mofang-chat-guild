@@ -56,6 +56,8 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		GlobalConfig.GUILD_GAME_GIFT_COUNT_EXPIRE = config.getInt("logic", "guild_game_gift_count_expire");
 		GlobalConfig.GUILD_CHECKIN_NUM_EXPIRE = config.getInt("logic", "guild_checkin_num_expire");
 		GlobalConfig.GUILD_GROUP_USER_LIST_EXPIRE = config.getInt("logic", "guild_group_user_list_expire");
+		GlobalConfig.MIN_NEW_GUILD_LIST_MEMBER = config.getInt("logic", "min_new_guild_list_member");
+		GlobalConfig.MIN_QUIT_JOIN_GUILD_HOURS = config.getInt("logic", "min_quit_join_guild_hours");
 		
 		GlobalConfig.USER_INFO_URL = config.get("api", "user_info_url");
 		GlobalConfig.GAME_INFO_URL = config.get("api", "game_info_url");
@@ -75,6 +77,7 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		
 		GlobalConfig.GUILD_DISMISS_TASK_TIME = config.get("cron", "guild_dismiss_task_time");
 		GlobalConfig.HOT_GUILD_RANK_UPDATE_TASK_TIME = config.get("cron", "hot_guild_rank_update_task_time");
+		GlobalConfig.NEW_GUILD_LIST_UPDATE_TASK_TIME = config.get("cron", "new_guild_list_update_task_time");
 		GlobalConfig.GUILD_NEW_MEMBER_COUNT_CLEAR_TASK_TIME = config.get("cron", "guild_new_member_count_clear_task_time");
 		GlobalConfig.GUILD_UNLOGIN_MEMBER_COUNT_7DAYS_CLEAR_TASK_TIME = config.get("cron", "guild_unlogin_member_count_7days_clear_task_time");
 		GlobalConfig.GUILD_UNLOGIN_MEMBER_COUNT_30DAYS_CLEAR_TASK_TIME = config.get("cron", "guild_unlogin_member_count_30days_clear_task_time");

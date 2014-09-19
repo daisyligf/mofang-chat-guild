@@ -22,4 +22,9 @@ public class GuildSearchAction extends AbstractActionExecutor
 	{
 		return logic.search(context);
 	}
+	
+	protected boolean needCheckAtom()
+	{
+		return false;
+	}
 }

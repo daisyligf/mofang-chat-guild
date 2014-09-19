@@ -33,7 +33,10 @@ public class UserComponent
 		}
 		
 		/// 调用服务端接口获取
+		long start = System.currentTimeMillis();
 		User user = getInfoByAPI(userId);
+		long end = System.currentTimeMillis();
+		GlobalObject.INFO_LOG.info("USER_INFO_URL costs time " + (end - start) + " ms");
 		if(null == user)
 			return null;
 		

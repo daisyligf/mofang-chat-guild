@@ -39,6 +39,10 @@ public interface GuildRedis
 	
 	public long getNewCount() throws Exception;
 	
+	public boolean addToNewList(Guild guild) throws Exception;
+	
+	public boolean clearNewList() throws Exception;
+	
 	public Set<String> getMyList(long userId) throws Exception;
 	
 	public long getMyCount(long userId) throws Exception;

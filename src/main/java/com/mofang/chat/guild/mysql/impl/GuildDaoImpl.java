@@ -1,6 +1,7 @@
 package com.mofang.chat.guild.mysql.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.mofang.chat.guild.global.GlobalObject;
@@ -135,5 +136,34 @@ public class GuildDaoImpl extends AbstractMysqlSupport<Guild> implements GuildDa
 	    	strSql.append("update guild set dismiss_time = '").append(date);
 	    	strSql.append("'").append(" where guild_id = ").append(guildId);
 	    	super.execute(strSql.toString());
+	}
+	
+	public List<Guild> getNewGuildList(int minMemberCount) throws Exception
+	{
+	    	StringBuilder strSql = new StringBuilder();
+	    	strSql.append("select a.guild_id, a.create_time, a.new_seq from guild a, ");
+	    	strSql.append("(SELECT guild_id,count(user_id) as num FROM guild_user where status=1 group by guild_id) b ");
+	    	strSql.append("where a.guild_id = b.guild_id and a.status = 1 and b.num >= ").append(minMemberCount); 
+	    	strSql.append(" order by a.new_seq desc, a.create_time desc ");
+	    	ResultData data = super.executeQuery(strSql.toString());
+	    	if (null == data)
+	    	    return null;
+	    	List<RowData> rows = data.getQueryResult();
+	    	if (null == rows || rows.size() == 0)
+	    	    return null;
+
+	    	List<Guild> list = new ArrayList<Guild>();
+	    	for (RowData row : rows) {
+	    	    long guildId= row.getLong(0);
+	    	    Date createTime = row.getDate(1);
+	    	    long newSeq = row.getLong(2);
+	    	    Guild guild = new Guild();
+	    	    guild.setGuildId(guildId);
+	    	    guild.setCreateTime(createTime);
+	    	    guild.setNewSeq(newSeq);
+	    	    list.add(guild);
+	    	}
+	    	return list;
+	    	
 	}
 }

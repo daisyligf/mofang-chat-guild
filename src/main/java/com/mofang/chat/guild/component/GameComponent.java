@@ -31,7 +31,10 @@ public class GameComponent
 		}
 		
 		/// 调用服务端接口获取
+		long start = System.currentTimeMillis();
 		Game game = getInfoByAPI(gameId);
+		long end = System.currentTimeMillis();
+		GlobalObject.INFO_LOG.info("GAME_INFO_URL costs time " + (end - start) + " ms");
 		if(null == game)
 			return null;
 		
@@ -70,6 +73,7 @@ public class GameComponent
 		}
 		catch(Exception e)
 		{
+		    	GlobalObject.ERROR_LOG.error("GameComponent.getInfoByAPI throws an error.", e);
 			return null;
 		}
 	}

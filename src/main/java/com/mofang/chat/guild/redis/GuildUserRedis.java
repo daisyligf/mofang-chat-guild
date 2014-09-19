@@ -53,4 +53,8 @@ public interface GuildUserRedis
 	public boolean clearUnloginMemberCount30Days() throws Exception;
 	
 	public int getUnloginMemberCount30Days(long guildId) throws Exception;
+	
+	public boolean saveUserLastQuitGuild(final long userId) throws Exception;
+	
+	public long getUserLastQuitGuild(long userId) throws Exception;
 }

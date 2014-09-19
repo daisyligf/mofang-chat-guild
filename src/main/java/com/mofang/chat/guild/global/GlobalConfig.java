@@ -65,6 +65,10 @@ public class GlobalConfig
 	
 	public static int GUILD_GROUP_USER_LIST_EXPIRE;
 	
+	public static int MIN_NEW_GUILD_LIST_MEMBER;
+	
+	public static int MIN_QUIT_JOIN_GUILD_HOURS;
+	
 	public static String USER_INFO_URL;
 	
 	public static String GAME_INFO_URL;
@@ -94,6 +98,8 @@ public class GlobalConfig
 	public static String GUILD_DISMISS_TASK_TIME;
 	
 	public static String HOT_GUILD_RANK_UPDATE_TASK_TIME;
+	
+	public static String NEW_GUILD_LIST_UPDATE_TASK_TIME;
 	
 	public static String GUILD_NEW_MEMBER_COUNT_CLEAR_TASK_TIME;
 	

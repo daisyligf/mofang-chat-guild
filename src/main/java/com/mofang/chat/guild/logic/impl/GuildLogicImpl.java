@@ -2,7 +2,6 @@ package com.mofang.chat.guild.logic.impl;
 
 import java.util.Date;
 import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.solr.client.solrj.response.QueryResponse;

@@ -81,4 +81,9 @@ public class ReturnCode
 	 * 公会待审核成员已存在
 	 */
 	public final static int GUILD_UNAUDIT_MEMBER_EXISTS = 921;
+	
+	/**
+	 * 用户退出公会后24小时内无法加入其它公会
+	 */
+	public final static int USER_QUIT_JOIN_GUILD_LIMIT = 922;
 }

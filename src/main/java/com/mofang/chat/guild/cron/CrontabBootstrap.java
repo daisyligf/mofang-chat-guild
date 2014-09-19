@@ -11,6 +11,7 @@ import com.mofang.chat.guild.cron.task.GuildNewMemberCountClearTask;
 import com.mofang.chat.guild.cron.task.GuildUnloginMemberCount30DaysUpdateTask;
 import com.mofang.chat.guild.cron.task.GuildUnloginMemberCount7DaysUpdateTask;
 import com.mofang.chat.guild.cron.task.HotGuildRankUpdateTask;
+import com.mofang.chat.guild.cron.task.NewGuildListUpdateTask;
 import com.mofang.chat.guild.global.GlobalConfig;
 
 /**
@@ -25,6 +26,7 @@ public class CrontabBootstrap implements Runnable
 	{
 		TaskEntity guildDismissTask = buildGuildDismissTask();
 		TaskEntity hotGuildRankUpdateTask = buildHotGuildRankUpdateTask();
+		TaskEntity newGuildListUpdateTask = buildNewGuildListUpdateTask();
 		TaskEntity newMemberCountClearTask = buildGuildNewMemberCountClearTask();
 		TaskEntity unloginMemberCount7DaysUpdateTask = buildGuildUnloginMemberCount7DaysUpdateTask();
 		TaskEntity unloginMemberCount30DaysUpdateTask = buildGuildUnloginMemberCount30DaysUpdateTask();
@@ -32,6 +34,7 @@ public class CrontabBootstrap implements Runnable
 		CrontabManager cron = new CrontabManager();
 		cron.add(guildDismissTask);
 		cron.add(hotGuildRankUpdateTask);
+		cron.add(newGuildListUpdateTask);
 		cron.add(newMemberCountClearTask);
 		cron.add(unloginMemberCount7DaysUpdateTask);
 		cron.add(unloginMemberCount30DaysUpdateTask);
@@ -58,6 +61,17 @@ public class CrontabBootstrap implements Runnable
 		String startTime = GlobalConfig.HOT_GUILD_RANK_UPDATE_TASK_TIME;
 		Runnable task = new HotGuildRankUpdateTask();
 		return buildTask(startTime, task);
+	}
+	
+	/**
+	 * 构建新锐公会列表更新的定时任务
+	 * @return
+	 */
+	private TaskEntity buildNewGuildListUpdateTask()
+	{
+	    	String startTime = GlobalConfig.NEW_GUILD_LIST_UPDATE_TASK_TIME;
+	    	Runnable task = new NewGuildListUpdateTask();
+	    	return buildTask(startTime, task);
 	}
 	
 	/**

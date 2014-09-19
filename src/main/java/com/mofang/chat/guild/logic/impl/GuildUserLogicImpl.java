@@ -39,6 +39,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 	private GuildUserRedis guildUserRedis = GuildUserRedisImpl.getInstance();
 	private GuildUserDao guildUserDao = GuildUserDaoImpl.getInstance();
 	private GuildUserService guildUserService = GuildUserServiceImpl.getInstance();
+	private final static long minQuitJoinGuildTime = GlobalConfig.MIN_QUIT_JOIN_GUILD_HOURS * 60 * 60 * 1000;
 	
 	private GuildUserLogicImpl()
 	{}
@@ -77,11 +78,19 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			JSONObject json = new JSONObject(postData);
 			long guildId = json.optLong("guild_id", 0L);
 			String postscript = json.optString("postscript", "");
-			if(0L == guildId)
+			if (0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
 				result.setMessage("公会ID无效");
 				return result;
+			}
+			
+			long lastQuitTime = guildUserRedis.getUserLastQuitGuild(userId);
+			if (System.currentTimeMillis() - lastQuitTime < minQuitJoinGuildTime)
+			{
+    			    	result.setCode(ReturnCode.USER_QUIT_JOIN_GUILD_LIMIT);
+    			    	result.setMessage("离开了公会使你极度伤心，一段时间内内不能加入其他公会。");
+    			    	return result;
 			}
 			
 			Guild guild = guildRedis.getInfo(guildId);
@@ -193,7 +202,8 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			long userId = Long.parseLong(uidString);
 			JSONObject json = new JSONObject(postData);
 			long guildId = json.optLong("guild_id", 0L);
-			if(0L == guildId)
+			
+			if (0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
 				result.setMessage("公会ID无效");
@@ -201,14 +211,14 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			}
 			
 			Guild guild = guildRedis.getInfo(guildId);
-			if(null == guild)
+			if (null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
 				result.setMessage("公会不存在");
 				return result;
 			}
 			
-			if(userId == guild.getCreatorId())
+			if (userId == guild.getCreatorId())
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
 				result.setMessage("会长不能退出公会");
@@ -217,6 +227,8 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			
 			///异步执行删除公会成员操作(包括用户主动退出公会以及被管理员踢出公会)
 			guildUserService.delete(guildId, userId, 1);
+			// 保存用户退出时间
+			guildUserRedis.saveUserLastQuitGuild(userId);
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
