@@ -48,13 +48,31 @@ public interface GuildUserRedis
 	
 	public int getUnloginMemberCount7Days(long guildId) throws Exception;
 	
+	public boolean setUnloginMemberList7Days(final long guildId, final String memberList) throws Exception;
+	
+	public boolean clearUnloginMemberList7Days() throws Exception;
+	
+	public String getUnloginMemberList7Days(final long guildId) throws Exception;
+	
 	public boolean setUnloginMemberCount30Days(long guildId, int count) throws Exception;
 	
 	public boolean clearUnloginMemberCount30Days() throws Exception;
 	
 	public int getUnloginMemberCount30Days(long guildId) throws Exception;
 	
+	public boolean setUnloginMemberList30Days(final long guildId, final String memberList) throws Exception;
+	
+	public boolean clearUnloginMemberList30Days() throws Exception;
+	
+	public String getUnloginMemberList30Days(final long guildId) throws Exception;
+	
 	public boolean saveUserLastQuitGuild(final long userId) throws Exception;
 	
 	public long getUserLastQuitGuild(long userId) throws Exception;
+	
+	public boolean saveGuildUserInfoList(long guildId, String value) throws Exception;
+	
+	public boolean deleteGuildUserInfoList(long guildId) throws Exception;
+	
+	public String getGuildUserInfoList(long guildId) throws Exception; 
 }

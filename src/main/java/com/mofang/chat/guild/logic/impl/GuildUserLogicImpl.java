@@ -8,11 +8,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mofang.chat.guild.global.GlobalConfig;
+import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.global.ResultValue;
 import com.mofang.chat.guild.global.ReturnCode;
 import com.mofang.chat.guild.global.common.GuildUserAuditType;
 import com.mofang.chat.guild.global.common.GuildUserRole;
 import com.mofang.chat.guild.global.common.GuildUserStatus;
+import com.mofang.chat.guild.global.common.GuildUserUnloginType;
 import com.mofang.chat.guild.logic.GuildUserLogic;
 import com.mofang.chat.guild.model.Guild;
 import com.mofang.chat.guild.model.GuildUser;
@@ -61,7 +63,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -69,6 +71,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		if(StringUtil.isNullOrEmpty(postData))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -81,7 +84,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if (0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			
@@ -89,7 +92,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if (System.currentTimeMillis() - lastQuitTime < minQuitJoinGuildTime)
 			{
     			    	result.setCode(ReturnCode.USER_QUIT_JOIN_GUILD_LIMIT);
-    			    	result.setMessage("离开了公会使你极度伤心，一段时间内内不能加入其他公会。");
+    			    	result.setMessage(GlobalObject.GLOBAL_MESSAGE.USER_QUIT_JOIN_GUILD_LIMIT);
     			    	return result;
 			}
 			
@@ -97,7 +100,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("公会不存在");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_NOT_EXISTS);
 				return result;
 			}
 			
@@ -105,7 +108,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(existsUnaudit)
 			{
 				result.setCode(ReturnCode.GUILD_UNAUDIT_MEMBER_EXISTS);
-				result.setMessage("您已提交入会申请, 请耐心等待");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_UNAUDIT_MEMBER_EXISTS);
 				return result;
 			}
 
@@ -118,7 +121,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 				if(joinCount >= GlobalConfig.MAX_JOIN_GUILD_COUNT)
 				{
 					result.setCode(ReturnCode.USER_JOIN_GUILD_UPPER_LIMIT);
-					result.setMessage("您加入的公会数已到达上限");
+					result.setMessage(GlobalObject.GLOBAL_MESSAGE.USER_JOIN_GUILD_UPPER_LIMIT);
 					return result;
 				}
 				
@@ -127,7 +130,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 				if(userCount >= GlobalConfig.MAX_GUILD_MEMBER_COUNT)
 				{
 					result.setCode(ReturnCode.GUILD_MEMBER_FULL);
-					result.setMessage("您所加入的公会已到达人数上限");
+					result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_MEMBER_FULL);
 					return result;
 				}
 				
@@ -136,7 +139,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 				if(exists)
 				{
 					result.setCode(ReturnCode.GUILD_MEMBER_EXISTS);
-					result.setMessage("您已加入该公会");
+					result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_MEMBER_EXISTS);
 					return result;
 				}
 			}
@@ -162,7 +165,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -186,7 +189,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -206,7 +209,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if (0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			
@@ -214,14 +217,14 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if (null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("公会不存在");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_NOT_EXISTS);
 				return result;
 			}
 			
 			if (userId == guild.getCreatorId())
 			{
-				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("会长不能退出公会");
+				result.setCode(ReturnCode.GUILD_CREATOR_CAN_NOT_QUIT);
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_CREATOR_CAN_NOT_QUIT);
 				return result;
 			}
 			
@@ -232,7 +235,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -259,7 +262,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -280,13 +283,13 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			if(0L == applyUid)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("申请用户ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.APPLY_UID_INVALID);
 				return result;
 			}
 			if(0L == auditType 
@@ -294,7 +297,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			   && auditType != GuildUserAuditType.AUDIT_NOT_PASS))
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("无效的操作");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.OP_TYPE_INVALID);
 				return result;
 			}
 			
@@ -302,7 +305,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("公会不存在");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_NOT_EXISTS);
 				return result;
 			}
 			
@@ -313,7 +316,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 				if(!hasPrivilege)
 				{
 					result.setCode(ReturnCode.NO_PRIVILEGE_TO_OPERATE);
-					result.setMessage("您无权进行审核操作");
+					result.setMessage(GlobalObject.GLOBAL_MESSAGE.NO_PRIVILEGE_TO_OPERATE_AUDIT);
 					return result;
 				}
 			}
@@ -329,7 +332,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 					if(joinCount >= GlobalConfig.MAX_JOIN_GUILD_COUNT)
 					{
 						result.setCode(ReturnCode.USER_JOIN_GUILD_UPPER_LIMIT);
-						result.setMessage("该用户加入的公会数已到达上限");
+						result.setMessage(GlobalObject.GLOBAL_MESSAGE.USER_JOIN_GUILD_UPPER_LIMIT);
 						return result;
 					}
 					
@@ -347,7 +350,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 					if(exists)
 					{
 						result.setCode(ReturnCode.GUILD_MEMBER_EXISTS);
-						result.setMessage("该用户已加入该公会");
+						result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_MEMBER_EXISTS);
 						return result;
 					}
 				}
@@ -362,7 +365,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -379,7 +382,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -399,13 +402,13 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			if(0L == memberUid)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("用户ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.USER_ID_INVALID);
 				return result;
 			}
 			
@@ -413,7 +416,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("公会不存在");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_NOT_EXISTS);
 				return result;
 			}
 			
@@ -424,7 +427,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 				if(!hasPrivilege)
 				{
 					result.setCode(ReturnCode.NO_PRIVILEGE_TO_OPERATE);
-					result.setMessage("您无权删除会员");
+					result.setMessage(GlobalObject.GLOBAL_MESSAGE.NO_PRIVILEGE_TO_OPERATE);
 					return result;
 				}
 				else   ///管理员不能删除管理员
@@ -433,7 +436,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 					if(isAdmin)
 					{
 						result.setCode(ReturnCode.NO_PRIVILEGE_TO_OPERATE);
-						result.setMessage("您无权删除公会管理员");
+						result.setMessage(GlobalObject.GLOBAL_MESSAGE.NO_PRIVILEGE_TO_OPERATE);
 						return result;
 					}
 				}
@@ -444,7 +447,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -461,7 +464,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -482,19 +485,19 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			if(0L == memberUid)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("用户ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.USER_ID_INVALID);
 				return result;
 			}
 			if(0 == role)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("角色无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.ROLE_INVALID);
 				return result;
 			}
 			
@@ -502,7 +505,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("公会不存在");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_NOT_EXISTS);
 				return result;
 			}
 			
@@ -510,14 +513,14 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(userId != guild.getCreatorId())
 			{
 				result.setCode(ReturnCode.NO_PRIVILEGE_TO_OPERATE);
-				result.setMessage("您无权进行角色变更操作");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.NO_PRIVILEGE_TO_CHANGE_ROLE);
 				return result;
 			}
 			
 			if(memberUid == guild.getCreatorId())
 			{
 				result.setCode(ReturnCode.NO_PRIVILEGE_TO_OPERATE);
-				result.setMessage("您无权进行角色变更操作");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.NO_PRIVILEGE_TO_CHANGE_ROLE);
 				return result;
 			}
 			
@@ -526,7 +529,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -545,7 +548,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			if(!StringUtil.isLong(strGuildId) || "0".equals(strGuildId))
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			long guildId = Long.parseLong(strGuildId);
@@ -554,7 +557,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			result.setData(data);
 			return result;
 		}
@@ -590,7 +593,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		    
@@ -598,6 +601,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
         	if(StringUtil.isNullOrEmpty(postData))
         	{
         		result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+        		result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
         		return result;
         	}
         	JSONObject json = new JSONObject(postData);
@@ -613,13 +617,55 @@ public class GuildUserLogicImpl implements GuildUserLogic
         	    data.put("exists", 0);
         	}
         	result.setCode(ReturnCode.SUCCESS);
-        	result.setMessage("OK");
+        	result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
         	result.setData(data);
         	return result;
 	    }
 	    catch(Exception e)
 	    {
 		throw new Exception("at GuildUserLogicImpl.userExists throw an error.", e);
+	    }
+	}
+	
+	public ResultValue unloginList(HttpRequestContext context) throws Exception
+	{
+	    ResultValue result = new ResultValue();
+	    try 
+	    {
+		String strGuildId = context.getParameters("guild_id");
+		if(!StringUtil.isLong(strGuildId) || "0".equals(strGuildId))
+		{
+			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
+			return result;
+		}
+		long guildId = Long.parseLong(strGuildId);
+		
+		String strType = context.getParameters("type");
+		if(!StringUtil.isLong(strType) || "0".equals(strType))
+		{
+			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.TYPE_INVALID);
+			return result;
+		}
+		int type = Integer.parseInt(strType);
+		String content = "";
+		// 判断请求数据的类型
+		if (type == GuildUserUnloginType.SEVEN_DAYS) {
+		    content = guildUserRedis.getUnloginMemberList7Days(guildId);
+		} else if (type == GuildUserUnloginType.THIRTY_DAYS) {
+		    content = guildUserRedis.getUnloginMemberList30Days(guildId);
+		}
+		
+		JSONArray memberList = new JSONArray(content);
+		result.setCode(ReturnCode.SUCCESS);
+		result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
+		result.setData(memberList);
+		return result;
+	    }
+	    catch(Exception e)
+	    {
+		throw new Exception("at GuildUserLogicImpl.unloginList throw an error.", e);
 	    }
 	}
 }

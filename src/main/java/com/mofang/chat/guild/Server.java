@@ -1,6 +1,11 @@
 package com.mofang.chat.guild;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import com.mofang.chat.guild.cron.CrontabBootstrap;
+import com.mofang.chat.guild.cron.task.GuildUserListUpdateExecutor;
 import com.mofang.chat.guild.global.GlobalConfig;
 import com.mofang.chat.guild.init.Initializer;
 import com.mofang.chat.guild.init.impl.MainInitializer;
@@ -37,6 +42,11 @@ public class Server
 			///启动定时任务
 			Thread timeJob = new Thread(new CrontabBootstrap());
 			timeJob.start();
+			
+			// 启动后台任务
+			int THREADS = Runtime.getRuntime().availableProcessors() + 1;
+			ScheduledExecutorService executor = Executors.newScheduledThreadPool(THREADS);
+			executor.scheduleAtFixedRate(new GuildUserListUpdateExecutor(), 0, GlobalConfig.GUILD_USER_LIST_UPDATE_INTERVAL, TimeUnit.SECONDS);
 			
 			///启动服务器
 			ActionResolve httpActionResolve = new DefaultHttpActionResolve();

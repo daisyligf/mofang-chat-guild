@@ -30,4 +30,8 @@ public interface GuildDao
 	public void updateDismissTime(long guildId, String date) throws Exception;
 	
 	public List<Guild> getNewGuildList(int minMemberCount) throws Exception;
+	
+	public List<Guild> getAll() throws Exception;
+	
+	public List<Long> getNormalGuildIds() throws Exception;
 }

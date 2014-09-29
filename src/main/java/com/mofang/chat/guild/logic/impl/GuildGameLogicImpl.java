@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mofang.chat.guild.global.GlobalConfig;
+import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.global.ResultValue;
 import com.mofang.chat.guild.global.ReturnCode;
 import com.mofang.chat.guild.logic.GuildGameLogic;
@@ -52,7 +53,7 @@ public class GuildGameLogicImpl implements GuildGameLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -73,13 +74,13 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			if(0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			if(null == addGameIds && null == delGameIds)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("游戏数组无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GAME_ARRAY_INVALID);
 				return result;
 			}
 			
@@ -87,14 +88,14 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			if(null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("公会不存在");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_NOT_EXISTS);
 				return result;
 			}
 			
 			if(guild.getCreatorId() != userId)
 			{
 				result.setCode(ReturnCode.NO_PRIVILEGE_TO_OPERATE);
-				result.setMessage("您无权修改公会游戏");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.NO_PRIVILEGE_TO_EDIT_GUILD_GAME);
 				return result;
 			}
 			
@@ -110,7 +111,7 @@ public class GuildGameLogicImpl implements GuildGameLogic
         			if(total > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
         			{
         				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
-        				result.setMessage("超过公会关联游戏最大数");
+        				result.setMessage(GlobalObject.GLOBAL_MESSAGE.OVER_GUILD_GAME_MAX_COUNT);
         				return result;
         			}
 			
@@ -123,7 +124,7 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			}
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -144,7 +145,7 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			if(!StringUtil.isInteger(strGameId) || "0".equals(strGameId))
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("游戏ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GAME_ID_INVALID);
 				return result;
 			}
 			
@@ -161,7 +162,7 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			result.setData(data);
 			return result;
 		}
@@ -181,7 +182,7 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			if(!StringUtil.isInteger(strGuildId) || "0".equals(strGuildId))
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			
@@ -196,7 +197,7 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			result.setData(data);
 			return result;
 		}

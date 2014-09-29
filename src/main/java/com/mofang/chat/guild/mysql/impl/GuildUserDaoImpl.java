@@ -1,6 +1,7 @@
 package com.mofang.chat.guild.mysql.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +144,39 @@ public class GuildUserDaoImpl extends AbstractMysqlSupport<GuildUser> implements
 			guildId = row.getLong(0);
 			count = row.getLong(1).intValue();
 			map.put(guildId, count);
+		}
+		return map;
+	}
+	
+	@Override
+	public Map<Long, List<Long>> getUnloginMemberMap(String dateAgo) throws Exception
+	{
+	    	StringBuilder strSql = new StringBuilder();
+		strSql.append("select guild_id, user_id from guild_user ");
+		strSql.append("where status = 1 and last_login_time <= '" + dateAgo + "' ");
+		strSql.append("order by guild_id");
+		ResultData data = super.executeQuery(strSql.toString());
+		if(null == data || (!data.getExecuteResult()))
+			return null;
+		
+		List<RowData> rows = data.getQueryResult();
+		if(null == rows || rows.size() == 0)
+			return null;
+		
+		long guildId = 0L;
+		long userId = 0L;
+		Map<Long, List<Long>> map = new HashMap<Long, List<Long>>();
+		for(RowData row : rows)
+		{
+			guildId = row.getLong(0);
+			userId = row.getLong(1);
+			List<Long> userIds = map.get(guildId);
+			if (userIds == null || userIds.size() == 0) 
+			{
+			    userIds = new ArrayList<Long>();
+			} 
+			userIds.add(userId);
+			map.put(guildId, userIds);
 		}
 		return map;
 	}

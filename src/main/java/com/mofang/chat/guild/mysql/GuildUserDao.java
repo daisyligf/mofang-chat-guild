@@ -36,4 +36,6 @@ public interface GuildUserDao
 	public long getJoinCount(long userId) throws Exception;
 	
 	public Map<Long, Integer> getUnloginMemberCount(String dateAgo) throws Exception;
+	
+	public Map<Long, List<Long>> getUnloginMemberMap(String dateAgo) throws Exception;
 }

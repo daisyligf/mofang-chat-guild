@@ -15,7 +15,7 @@ import com.mofang.framework.net.http.HttpClientSender;
  */
 public class SensitiveWordsComponent
 {
-    public static String filter(String words)
+    public static JSONObject filter(String words)
     {
 	try 
 	{
@@ -27,12 +27,12 @@ public class SensitiveWordsComponent
 	    long end = System.currentTimeMillis();
 	    GlobalObject.INFO_LOG.info("SENSITIVE_WORDS_SERVICE_URL costs time " + (end - start) + " ms");
 	    GlobalObject.INFO_LOG.info("at SensitiveWordsComponent.filter before:" + words + ",after:" + after);
-	    return after;
+	    return json;
 	}
 	catch (Exception e) 
 	{
 	    GlobalObject.ERROR_LOG.error("at SensitiveWordsComponent.filter throw an error.", e);
-	    return words;
+	    return new JSONObject();
 	}
     }
 }

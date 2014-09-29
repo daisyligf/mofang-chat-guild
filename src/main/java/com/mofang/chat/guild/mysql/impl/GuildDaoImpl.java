@@ -166,4 +166,26 @@ public class GuildDaoImpl extends AbstractMysqlSupport<Guild> implements GuildDa
 	    	return list;
 	    	
 	}
+	public List<Guild> getAll() throws Exception {
+	    Operand where = new WhereOperand();
+	    Operand equal = new EqualOperand("1", "1");
+	    where.append(equal);
+	    return super.getList(where);
+	}
+	
+	public List<Long> getNormalGuildIds() throws Exception {
+	    	String strSql = "select guild_id from guild where status=1 ";
+	    	ResultData data = super.executeQuery(strSql);
+		if(null == data)
+			return null;
+		
+		List<RowData> rows = data.getQueryResult();
+		if(null == rows || rows.size() == 0)
+			return null;
+		
+		List<Long> list = new ArrayList<Long>();
+		for(RowData row : rows)
+			list.add(row.getLong(0));
+		return list;
+	}
 }

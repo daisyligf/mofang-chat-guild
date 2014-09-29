@@ -18,6 +18,12 @@ public class RedisKey
 	public final static String GUILD_INFO_KEY_PREFIX = "guild_info_";
 	
 	/**
+	 * 公会成员详细信息列表结果key前缀
+	 * 结构: guild_user_info_list_{guildid}
+	 */
+	public final static String GUILD_USER_INFO_LIST_KEY_PREFIX = "guild_user_info_list_";
+	
+	/**
 	 * 最热公会列表key(审核已通过)
 	 */
 	public final static String GUILD_HOT_LIST_KEY = "guild_hot_list";
@@ -191,12 +197,24 @@ public class RedisKey
 	public final static String GUILD_UNLOGIN_MEMBER_COUNT_7DAYS_KEY = "guild_unlogin_member_count_7days";
 	
 	/**
+	 * 公会7日未登录用户列表key
+	 * 
+	 * 
+	 */
+	public final static String GUILD_UNLOGIN_MEMBER_LIST_7DAYS_KEY = "guild_unlogin_member_list_7days";
+	
+	/**
 	* 公会30日未登录用户数key
 	 * hash结构 guild_unlogin_member_count_30days {guildid}:{count}
 	 * 例如 hset guild_unlogin_member_count_30days 1000002 10
 	 */
 	public final static String GUILD_UNLOGIN_MEMBER_COUNT_30DAYS_KEY = "guild_unlogin_member_count_30days";
 	
+	/**
+	 * 公会30日未登录用户列表key
+	 * 
+	 */
+	public final static String GUILD_UNLOGIN_MEMBER_LIST_30DAYS_KEY = "guild_unlogin_member_list_30days";
 	/**
 	 * 用户最近依次退出公会时间记录列表
 	 */

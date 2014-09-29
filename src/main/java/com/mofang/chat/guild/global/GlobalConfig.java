@@ -108,4 +108,8 @@ public class GlobalConfig
 	public static String GUILD_UNLOGIN_MEMBER_COUNT_30DAYS_CLEAR_TASK_TIME;
 	
 	public static String SENSITIVE_WORDS_SERVICE_URL;
+	
+	public static int GUILD_USER_LIST_UPDATE_INTERVAL;
+	
+	public static String GLOBAL_MESSAGE_PATH;
 }

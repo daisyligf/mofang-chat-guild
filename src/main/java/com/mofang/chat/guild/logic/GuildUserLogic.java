@@ -23,4 +23,6 @@ public interface GuildUserLogic
 	public ResultValue getList(HttpRequestContext context) throws Exception;
 	
 	public ResultValue userExists (HttpRequestContext context) throws Exception;
+	
+	public ResultValue unloginList(HttpRequestContext context) throws Exception;
 }

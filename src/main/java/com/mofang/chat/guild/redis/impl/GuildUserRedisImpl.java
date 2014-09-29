@@ -439,6 +439,44 @@ public class GuildUserRedisImpl implements GuildUserRedis
 		};
 		return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
+	
+	@Override
+	public boolean setUnloginMemberList7Days(final long guildId, final String memberList) throws Exception
+	{
+		RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+		{
+			@Override
+			public Boolean execute(Jedis jedis) throws Exception
+			{
+				String key = RedisKey.GUILD_UNLOGIN_MEMBER_LIST_7DAYS_KEY;
+				jedis.hset(key, String.valueOf(guildId), memberList);
+				return true;
+			}
+		};
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public boolean clearUnloginMemberList7Days() throws Exception
+	{
+	    	String key = RedisKey.GUILD_UNLOGIN_MEMBER_LIST_7DAYS_KEY;
+	    	RedisWorker<Boolean> worker = new DeleteWorker(key);
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public String getUnloginMemberList7Days(final long guildId) throws Exception
+	{
+	    	RedisWorker<String> worker = new RedisWorker<String>()
+	    	{
+	    	    public String execute(Jedis jedis) throws Exception
+	    	    {
+	    		String key = RedisKey.GUILD_UNLOGIN_MEMBER_LIST_7DAYS_KEY;
+	    		return jedis.hget(key, String.valueOf(guildId));
+	    	    }
+	    	};
+	    	return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+	}
 
 	@Override
 	public boolean setUnloginMemberCount30Days(final long guildId, final int count) throws Exception
@@ -463,7 +501,7 @@ public class GuildUserRedisImpl implements GuildUserRedis
 		RedisWorker<Boolean> worker = new DeleteWorker(key);
 		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
 	}
-
+	
 	@Override
 	public int getUnloginMemberCount30Days(final long guildId) throws Exception
 	{
@@ -480,6 +518,44 @@ public class GuildUserRedisImpl implements GuildUserRedis
 			}
 		};
 		return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public boolean setUnloginMemberList30Days(final long guildId, final String memberList) throws Exception
+	{
+		RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+		{
+			@Override
+			public Boolean execute(Jedis jedis) throws Exception
+			{
+				String key = RedisKey.GUILD_UNLOGIN_MEMBER_LIST_30DAYS_KEY;
+				jedis.hset(key, String.valueOf(guildId), memberList);
+				return true;
+			}
+		};
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public boolean clearUnloginMemberList30Days() throws Exception
+	{
+	    	String key = RedisKey.GUILD_UNLOGIN_MEMBER_LIST_30DAYS_KEY;
+	    	RedisWorker<Boolean> worker = new DeleteWorker(key);
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public String getUnloginMemberList30Days(final long guildId) throws Exception
+	{
+	    	RedisWorker<String> worker = new RedisWorker<String>()
+	    	{
+	    	    public String execute(Jedis jedis) throws Exception
+	    	    {
+	    		String key = RedisKey.GUILD_UNLOGIN_MEMBER_LIST_30DAYS_KEY;
+	    		return jedis.hget(key, String.valueOf(guildId));
+	    	    }
+	    	};
+	    	return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
 	
 	@Override
@@ -515,6 +591,35 @@ public class GuildUserRedisImpl implements GuildUserRedis
         		    return 0L;
         		}
 	    };
+	    return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+	}
+	
+	public boolean saveGuildUserInfoList(final long guildId, final String value) throws Exception 
+	{
+	    RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+	    {
+			@Override
+			public Boolean execute(Jedis jedis) throws Exception 
+			{
+			    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
+			    jedis.set(key, value);
+			    return true;
+			}
+	    };
+	    return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
+	
+	public boolean deleteGuildUserInfoList(long guildId) throws Exception
+	{
+	    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
+	    RedisWorker<Boolean> worker = new DeleteWorker(key);
+	    return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
+	
+	public String getGuildUserInfoList(long guildId) throws Exception
+	{
+	    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
+	    RedisWorker<String> worker = new GetWorker(key);
 	    return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
 	

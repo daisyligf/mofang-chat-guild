@@ -6,6 +6,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.global.ResultValue;
 import com.mofang.chat.guild.global.ReturnCode;
 import com.mofang.chat.guild.global.common.GuildRecruitStatus;
@@ -52,7 +53,7 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 		if(!StringUtil.isLong(uidString))
 		{
 			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-			result.setMessage("参数无效");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
 			return result;
 		}
 		
@@ -72,13 +73,13 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 			if(0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			if(StringUtil.isNullOrEmpty(content))
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("招募信息不能为空");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.RECRUIT_MESSAGE_CAN_NOT_BE_EMPTY);
 				return result;
 			}
 			
@@ -86,14 +87,14 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 			if(null == guild)
 			{
 				result.setCode(ReturnCode.GUILD_NOT_EXISTS);
-				result.setMessage("公会不存在");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_NOT_EXISTS);
 				return result;
 			}
 			
 			if(guild.getCreatorId() != userId)
 			{
 				result.setCode(ReturnCode.NO_PRIVILEGE_TO_OPERATE);
-				result.setMessage("您无权发布招募信息");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.NO_PRIVILEGE_TO_POST_RECRUIT);
 				return result;
 			}
 			
@@ -111,7 +112,7 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -140,14 +141,14 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 			if(0L == guildId)
 			{
 				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("公会ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_ID_INVALID);
 				return result;
 			}
 			
 			if (0L == recruitId)
 			{
 			    	result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
-				result.setMessage("招募信息ID无效");
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.RECRUIT_ID_INVALID);
 				return result;
 			}
 			
@@ -160,7 +161,7 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			return result;
 		}
 		catch(Exception e)
@@ -196,7 +197,7 @@ public class GuildRecruitLogicImpl implements GuildRecruitLogic
 			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
-			result.setMessage("OK");
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 			result.setData(data);
 			return result;
 		}

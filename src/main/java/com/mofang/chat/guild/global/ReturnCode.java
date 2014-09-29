@@ -86,4 +86,9 @@ public class ReturnCode
 	 * 用户退出公会后24小时内无法加入其它公会
 	 */
 	public final static int USER_QUIT_JOIN_GUILD_LIMIT = 922;
+	
+	/**
+	 * 会长不能退出公会
+	 */
+	public final static int GUILD_CREATOR_CAN_NOT_QUIT = 923;
 }

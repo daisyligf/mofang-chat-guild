@@ -51,6 +51,11 @@ public class GlobalObject
 	public final  static SolrServer SEARCH_SOLR_SERVER = new HttpSolrServer(GlobalConfig.SOLR_URL);
 	
 	/**
+	 * 
+	 */
+	public final static GlobalMessage GLOBAL_MESSAGE = new GlobalMessage();
+	
+	/**
 	 * Mysql Pool Instance
 	 */
 	public static MysqlPool MYSQL_CONNECTION_POOL = null;
@@ -197,6 +202,61 @@ public class GlobalObject
         {
         	throw e;
         }
+	}
+	
+	public static void initGlobalMessage(String configPath) throws Exception
+	{
+	    try 
+	    {
+		
+		Properties configurations = loadConfig(configPath);
+		GLOBAL_MESSAGE.SUCCESS = configurations.getProperty("success");
+		GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID = configurations.getProperty("client_request_data_is_invalid");
+		GLOBAL_MESSAGE.CLIENT_REQUEST_PARAMETER_FORMAT_ERROR = configurations.getProperty("client_request_parameter_format_error");
+		GLOBAL_MESSAGE.CLIENT_REQUEST_LOST_NECESSARY_PARAMETER = configurations.getProperty("client_request_lost_necessary_parameter");
+		GLOBAL_MESSAGE.SERVER_ERROR = configurations.getProperty("server_error");
+		GLOBAL_MESSAGE.GUILD_ID_INVALID = configurations.getProperty("guild_id_invalid");
+		GLOBAL_MESSAGE.USER_CAN_NOT_CREATE_GUILD = configurations.getProperty("user_can_not_create_guild");
+		GLOBAL_MESSAGE.OVER_GUILD_GAME_MAX_COUNT = configurations.getProperty("over_guild_game_max_count");
+		GLOBAL_MESSAGE.GUILD_NOT_EXISTS = configurations.getProperty("guild_not_exists");
+		GLOBAL_MESSAGE.GUILD_CREATOR_CAN_NOT_QUIT = configurations.getProperty("guild_creator_can_not_quit");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_OPERATE = configurations.getProperty("no_privilege_to_operate");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_OPERATE_AUDIT = configurations.getProperty("no_privilege_to_operate_audit");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_EDIT_GUILD_GAME = configurations.getProperty("no_privilege_to_edit_guild_game");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_EDIT_GUILD_INFO = configurations.getProperty("no_privilege_to_edit_guild_info");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_DISMISS_GUILD = configurations.getProperty("no_privilege_to_dismiss_guild");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_CHANGE_ROLE = configurations.getProperty("no_privilege_to_change_role");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_POST_RECRUIT = configurations.getProperty("no_privilege_to_post_recruit");
+		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_DEL_GROUP_USER = configurations.getProperty("no_privilege_to_del_group_user");
+		GLOBAL_MESSAGE.GUILD_MEMBER_FULL = configurations.getProperty("guild_member_full");
+		GLOBAL_MESSAGE.USER_JOIN_GUILD_UPPER_LIMIT = configurations.getProperty("user_join_guild_upper_limit");
+		GLOBAL_MESSAGE.GUILD_GROUP_NOT_EXISTS = configurations.getProperty("guild_group_not_exists");
+		GLOBAL_MESSAGE.GUILD_RECRUIT_NOT_EXISTS = configurations.getProperty("guild_recruit_not_exists");
+		GLOBAL_MESSAGE.GUILD_MEMBER_EXISTS = configurations.getProperty("guild_member_exists");
+		GLOBAL_MESSAGE.GUILD_GROUP_MEMBER_EXISTS = configurations.getProperty("guild_group_member_exists");
+		GLOBAL_MESSAGE.GUILD_UNAUDIT_MEMBER_EXISTS = configurations.getProperty("guild_unaudit_member_exists");
+		GLOBAL_MESSAGE.USER_QUIT_JOIN_GUILD_LIMIT = configurations.getProperty("user_quit_join_guild_limit");
+		GLOBAL_MESSAGE.APPLY_UID_INVALID = configurations.getProperty("apply_uid_invalid");
+		GLOBAL_MESSAGE.INVALID_OPERATION = configurations.getProperty("invalid_operation");
+		GLOBAL_MESSAGE.GAME_ID_INVALID = configurations.getProperty("game_id_invalid");
+		GLOBAL_MESSAGE.GAME_ARRAY_INVALID = configurations.getProperty("game_array_invalid");
+		GLOBAL_MESSAGE.GROUP_ID_INVALID = configurations.getProperty("group_id_invalid");
+		GLOBAL_MESSAGE.TYPE_INVALID = configurations.getProperty("type_invalid");
+		GLOBAL_MESSAGE.USER_ID_INVALID = configurations.getProperty("user_id_invalid");
+		GLOBAL_MESSAGE.MEMBER_ID_INVALID = configurations.getProperty("member_id_invalid");
+		GLOBAL_MESSAGE.ROLE_INVALID = configurations.getProperty("role_invalid");
+		GLOBAL_MESSAGE.NEED_GUILD_NAME = configurations.getProperty("need_guild_name");
+		GLOBAL_MESSAGE.NEED_GUILD_AVATAR = configurations.getProperty("need_guild_avatar");
+		GLOBAL_MESSAGE.RECRUIT_ID_INVALID = configurations.getProperty("recruit_id_invalid");
+		GLOBAL_MESSAGE.RECRUIT_MESSAGE_CAN_NOT_BE_EMPTY = configurations.getProperty("recruit_message_can_not_be_empty");
+		GLOBAL_MESSAGE.OP_TYPE_INVALID = configurations.getProperty("op_type_invalid");
+		GLOBAL_MESSAGE.LIST_TYPE_INVALID = configurations.getProperty("list_type_invalid");
+		GLOBAL_MESSAGE.KEYWORD_CAN_NOT_BE_EMPTY = configurations.getProperty("keyword_can_not_be_empty");
+	    }
+	    catch(Exception e)
+	    {
+		throw e;
+	    }
 	}
 	
 	private static HttpClientProvider getHttpClientProvider(String configPath) throws Exception

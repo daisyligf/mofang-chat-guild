@@ -1,6 +1,7 @@
 package com.mofang.chat.guild.service;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.mofang.chat.guild.model.Guild;
 import com.mofang.chat.guild.model.GuildUser;
@@ -21,4 +22,6 @@ public interface GuildUserService
 	public void audit(Guild guild, long applyUid, int auditType) throws Exception;
 	
 	public JSONArray getAllUserList(long guildId) throws Exception;
+	
+	public JSONObject getUserInfo(long guildId, long userId);
 }
