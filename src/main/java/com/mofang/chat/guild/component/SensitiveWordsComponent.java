@@ -19,13 +19,10 @@ public class SensitiveWordsComponent
     {
 	try 
 	{
-	    long start = System.currentTimeMillis();
 	    String url = GlobalConfig.SENSITIVE_WORDS_SERVICE_URL + URLEncoder.encode(words, "UTF-8");
 	    String result = HttpClientSender.get(GlobalObject.HTTP_CLIENT_API, url);
 	    JSONObject json = new JSONObject(result);
 	    String after = json.optString("out", "");
-	    long end = System.currentTimeMillis();
-	    GlobalObject.INFO_LOG.info("SENSITIVE_WORDS_SERVICE_URL costs time " + (end - start) + " ms");
 	    GlobalObject.INFO_LOG.info("at SensitiveWordsComponent.filter before:" + words + ",after:" + after);
 	    return json;
 	}

@@ -32,6 +32,8 @@ public class GuildUnloginMemberCount30DaysUpdateTask implements Runnable
 	@Override
 	public void run()
 	{
+	    	GlobalObject.INFO_LOG.info("entering GuildUnloginMemberCount30DaysUpdateTask.");
+	    	long start = System.currentTimeMillis();
 		try
 		{
 			///清空公会30天未登录用户数
@@ -70,7 +72,9 @@ public class GuildUnloginMemberCount30DaysUpdateTask implements Runnable
 			    }
 			}
 			
+			long end = System.currentTimeMillis();
 			
+			GlobalObject.INFO_LOG.info("GuildUnloginMemberCount30DaysUpdateTask costs time " + (end - start)/1000 + " s" );
 			GlobalObject.INFO_LOG.info("GuildUnloginMemberCount30DaysUpdateTask execute completed");
 		}
 		catch(Exception e)

@@ -30,6 +30,7 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		
 		GlobalConfig.SCAN_PACKAGE_PATH = config.get("conf", "scan_package_path");
 		GlobalConfig.GLOBAL_MESSAGE_PATH = config.get("conf", "global_message_path");
+		GlobalConfig.CRON_TASK_CONFIG_PATH = config.get("conf", "cron_task_config_path");
 		GlobalConfig.MYSQL_CONFIG_PATH = config.get("conf", "mysql_config_path");
 		GlobalConfig.REDIS_MASTER_CONFIG_PATH = config.get("conf", "redis_master_config_path");
 		GlobalConfig.REDIS_SLAVE_CONFIG_PATH = config.get("conf", "redis_slave_config_path");

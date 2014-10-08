@@ -27,10 +27,7 @@ public class CheckInComponent
 			return Integer.parseInt(value);
 		
 		/// 调用服务端接口获取
-		long start = System.currentTimeMillis();
 		int num = getCheckinNumByAPI(guildId, null);
-		long end = System.currentTimeMillis();
-		GlobalObject.INFO_LOG.info("GUILD_CHECKIN_NUM_URL costs time " + (end - start) + " ms");
 		try
 		{
 			///保存到redis中

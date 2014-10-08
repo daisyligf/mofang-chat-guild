@@ -9,7 +9,9 @@ import org.json.JSONObject;
 import com.mofang.chat.guild.component.NotifyPushComponent;
 import com.mofang.chat.guild.component.UserComponent;
 import com.mofang.chat.guild.entity.User;
+import com.mofang.chat.guild.global.GlobalConfig;
 import com.mofang.chat.guild.global.GlobalObject;
+import com.mofang.chat.guild.global.RedisKey;
 import com.mofang.chat.guild.global.common.GuildUserAuditType;
 import com.mofang.chat.guild.global.common.GuildUserRole;
 import com.mofang.chat.guild.global.common.GuildUserStatus;
@@ -24,11 +26,14 @@ import com.mofang.chat.guild.redis.GuildGameRedis;
 import com.mofang.chat.guild.redis.GuildGroupRedis;
 import com.mofang.chat.guild.redis.GuildGroupUserRedis;
 import com.mofang.chat.guild.redis.GuildUserRedis;
+import com.mofang.chat.guild.redis.ResultCacheRedis;
 import com.mofang.chat.guild.redis.impl.GuildGameRedisImpl;
 import com.mofang.chat.guild.redis.impl.GuildGroupRedisImpl;
 import com.mofang.chat.guild.redis.impl.GuildGroupUserRedisImpl;
 import com.mofang.chat.guild.redis.impl.GuildUserRedisImpl;
+import com.mofang.chat.guild.redis.impl.ResultCacheRedisImpl;
 import com.mofang.chat.guild.service.GuildUserService;
+import com.mofang.framework.util.StringUtil;
 
 /**
  * 
@@ -44,6 +49,7 @@ public class GuildUserServiceImpl implements GuildUserService
 	private GuildGroupUserRedis guildGroupUserRedis = GuildGroupUserRedisImpl.getInstance();
 	private GuildGroupUserDao guildGroupUserDao = GuildGroupUserDaoImpl.getInstance();
 	private GuildGameRedis guildGameRedis = GuildGameRedisImpl.getInstance();
+	private ResultCacheRedis resultCacheRedis = ResultCacheRedisImpl.getInstance();
 	
 	private GuildUserServiceImpl()
 	{}
@@ -219,48 +225,49 @@ public class GuildUserServiceImpl implements GuildUserService
 	@Override
 	public JSONArray getAllUserList(final long guildId) throws Exception
 	{
-	    
-	    	String result = guildUserRedis.getGuildUserInfoList(guildId);
-	    	JSONArray data = new JSONArray(result);
+		///如果结果缓存里有，直接返回
+		String cacheKey = RedisKey.CACHE_GUILD_USER_LIST_KEY_PREFIX + guildId;
+		String result = resultCacheRedis.getCache(cacheKey);
+		if(!StringUtil.isNullOrEmpty(result))
+		{
+			JSONArray data = new JSONArray(result);
+			return data;
+		}
+		
+		// 缓存过期，则从redis存的数据里获取，这个数据1h更新一次
+	    	result = guildUserRedis.getGuildUserInfoList(guildId);
+	    	if (!StringUtil.isNullOrEmpty(result)) {
+	    	    JSONArray data = new JSONArray(result);
+	    	    return data;
+	    	}
+		/// 缓存过期+redis里还没有创建好，则需要重新构建列表信息，并将结果存入缓存中
+		JSONArray data = new JSONArray();
+		JSONObject userJson = null;
+		///添加公会待审核成员
+		Set<String> unauditedUserIds = guildUserRedis.getUnauditedUserList(guildId);
+		if(null != unauditedUserIds)
+		{
+			for(String userId : unauditedUserIds)
+			{
+				userJson = getUserInfo(guildId, Long.parseLong(userId));
+				if(null != userJson)
+					data.put(userJson);
+			}
+		}
+		///添加公会成员
+		Set<String> userIds = guildUserRedis.getUserList(guildId);
+		if(null != userIds)
+		{
+			for(String userId : userIds)
+			{
+				userJson = getUserInfo(guildId, Long.parseLong(userId));
+				if(null != userJson)
+					data.put(userJson);
+			}
+		}
+		///将结果存入缓存中
+		resultCacheRedis.saveCache(cacheKey, data.toString(), GlobalConfig.GUILD_USER_LIST_EXPIRE);
 		return data;
-	    	
-//		///如果结果缓存里有，直接返回
-//		String cacheKey = RedisKey.CACHE_GUILD_USER_LIST_KEY_PREFIX + guildId;
-//		String result = resultCacheRedis.getCache(cacheKey);
-//		if(!StringUtil.isNullOrEmpty(result))
-//		{
-//			JSONArray data = new JSONArray(result);
-//			return data;
-//		}
-//		
-//		///结果缓存没有，则需要重新构建列表信息，并将结果存入缓存中
-//		JSONArray data = new JSONArray();
-//		JSONObject userJson = null;
-//		///添加公会待审核成员
-//		Set<String> unauditedUserIds = guildUserRedis.getUnauditedUserList(guildId);
-//		if(null != unauditedUserIds)
-//		{
-//			for(String userId : unauditedUserIds)
-//			{
-//				userJson = getUserInfo(guildId, Long.parseLong(userId));
-//				if(null != userJson)
-//					data.put(userJson);
-//			}
-//		}
-//		///添加公会成员
-//		Set<String> userIds = guildUserRedis.getUserList(guildId);
-//		if(null != userIds)
-//		{
-//			for(String userId : userIds)
-//			{
-//				userJson = getUserInfo(guildId, Long.parseLong(userId));
-//				if(null != userJson)
-//					data.put(userJson);
-//			}
-//		}
-//		///将结果存入缓存中
-//		resultCacheRedis.saveCache(cacheKey, data.toString(), GlobalConfig.GUILD_USER_LIST_EXPIRE);
-//		return data;
 	}
 	
 	public JSONObject getUserInfo(long guildId, long userId)

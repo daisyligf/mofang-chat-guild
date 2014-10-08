@@ -27,10 +27,7 @@ public class GiftComponent
 			return Integer.parseInt(value);
 		
 		/// 调用服务端接口获取
-		long start = System.currentTimeMillis();
 		int giftCount = getGuildGiftCountByAPI(guildId);
-		long end = System.currentTimeMillis();
-		GlobalObject.INFO_LOG.info("GUILD_GIFT_COUNT_URL costs time " + (end - start) + " ms");
 		
 		try
 		{

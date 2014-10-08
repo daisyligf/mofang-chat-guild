@@ -657,7 +657,12 @@ public class GuildUserLogicImpl implements GuildUserLogic
 		    content = guildUserRedis.getUnloginMemberList30Days(guildId);
 		}
 		
-		JSONArray memberList = new JSONArray(content);
+		
+		JSONArray memberList = new JSONArray();
+		if (content != null)
+		{
+		    memberList = new JSONArray(content);
+		}
 		result.setCode(ReturnCode.SUCCESS);
 		result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
 		result.setData(memberList);

@@ -32,9 +32,10 @@ public class GuildUserListUpdateExecutor implements Runnable {
 
 	    long start = System.currentTimeMillis();
 	    List<Long> guildIds = guildDao.getNormalGuildIds();
-	    JSONArray data = new JSONArray();
+	    JSONArray data = null;
 	    JSONObject userJson = null;
 	    for (Long guildId : guildIds) {
+		data = new JSONArray();
 		Set<String> unauditedUserSet = guildUserRedis.getUnauditedUserList(guildId);
 		for (String userId : unauditedUserSet) {
 		    userJson = getUserInfo(guildId, Long.parseLong(userId));

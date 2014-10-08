@@ -1,10 +1,16 @@
 package com.mofang.chat.guild.cron;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
 import com.mofang.chat.guild.cron.task.GuildDismissTask;
 import com.mofang.chat.guild.cron.task.GuildNewMemberCountClearTask;
@@ -13,6 +19,7 @@ import com.mofang.chat.guild.cron.task.GuildUnloginMemberCount7DaysUpdateTask;
 import com.mofang.chat.guild.cron.task.HotGuildRankUpdateTask;
 import com.mofang.chat.guild.cron.task.NewGuildListUpdateTask;
 import com.mofang.chat.guild.global.GlobalConfig;
+import com.mofang.chat.guild.global.GlobalObject;
 
 /**
  * 定时任务启动类
@@ -24,21 +31,36 @@ public class CrontabBootstrap implements Runnable
 	@Override
 	public void run()
 	{
-		TaskEntity guildDismissTask = buildGuildDismissTask();
-		TaskEntity hotGuildRankUpdateTask = buildHotGuildRankUpdateTask();
-		TaskEntity newGuildListUpdateTask = buildNewGuildListUpdateTask();
-		TaskEntity newMemberCountClearTask = buildGuildNewMemberCountClearTask();
-		TaskEntity unloginMemberCount7DaysUpdateTask = buildGuildUnloginMemberCount7DaysUpdateTask();
-		TaskEntity unloginMemberCount30DaysUpdateTask = buildGuildUnloginMemberCount30DaysUpdateTask();
-		
-		CrontabManager cron = new CrontabManager();
-		cron.add(guildDismissTask);
-		cron.add(hotGuildRankUpdateTask);
-		cron.add(newGuildListUpdateTask);
-		cron.add(newMemberCountClearTask);
-		cron.add(unloginMemberCount7DaysUpdateTask);
-		cron.add(unloginMemberCount30DaysUpdateTask);
-		cron.execute();
+	    	Document doc = null;
+		try
+		{
+		    	CrontabManager cron = new CrontabManager();
+			SAXReader reader = new SAXReader();
+			doc = reader.read(new File(GlobalConfig.CRON_TASK_CONFIG_PATH));
+			Element root = doc.getRootElement();
+			
+			@SuppressWarnings("unchecked")
+			List<Element> list = root.elements("task");
+			for (Element obj: list)
+			{
+			    String className = obj.elementText("class");
+			    Runnable task = (Runnable) Class.forName(className).newInstance();
+			    String startTime = obj.elementText("startTime");
+			    boolean startup = Boolean.parseBoolean(obj.elementText("startup"));
+			    TaskEntity taskEntity = buildTask(startTime, task);
+			    if (startup)
+			    {
+				cron.add(taskEntity);
+				GlobalObject.INFO_LOG.info("Task Class:" + className + ",StartTime:" + startTime + " added");
+			    }
+			}
+			cron.execute();
+			GlobalObject.INFO_LOG.info("CrontabBootstrap.run finished.");
+		}
+		catch (Exception e)
+		{
+		    GlobalObject.ERROR_LOG.error("CrontabBootstrap.run throws an error.", e);
+		}
 	}
 	
 	/**

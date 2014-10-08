@@ -112,4 +112,6 @@ public class GlobalConfig
 	public static int GUILD_USER_LIST_UPDATE_INTERVAL;
 	
 	public static String GLOBAL_MESSAGE_PATH;
+	
+	public static String CRON_TASK_CONFIG_PATH;
 }

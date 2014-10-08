@@ -31,7 +31,9 @@ public class GuildUnloginMemberCount7DaysUpdateTask implements Runnable
 
 	@Override
 	public void run()
-	{
+	{	
+	    	GlobalObject.INFO_LOG.info("entering GuildUnloginMemberCount7DaysUpdateTask.");
+	    	long start = System.currentTimeMillis();
 		try
 		{
 			///清空公会7天未登录用户数
@@ -68,7 +70,9 @@ public class GuildUnloginMemberCount7DaysUpdateTask implements Runnable
 				guildUserRedis.setUnloginMemberList7Days(guildId, memberList.toString());
 			    }
 			}
+			long end = System.currentTimeMillis();
 			
+			GlobalObject.INFO_LOG.info("GuildUnloginMemberCount7DaysUpdateTask costs time " + (end - start)/1000 + " s" );
 			GlobalObject.INFO_LOG.info("GuildUnloginMemberCount7DaysUpdateTask execute completed");
 		}
 		catch(Exception e)
