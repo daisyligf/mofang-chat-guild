@@ -163,6 +163,8 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			///异步执行申请加入公会操作
 			guildUserService.join(model);
 			
+			///异步执行任务接口
+			
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
 			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
@@ -332,7 +334,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 					if(joinCount >= GlobalConfig.MAX_JOIN_GUILD_COUNT)
 					{
 						result.setCode(ReturnCode.USER_JOIN_GUILD_UPPER_LIMIT);
-						result.setMessage(GlobalObject.GLOBAL_MESSAGE.USER_JOIN_GUILD_UPPER_LIMIT);
+						result.setMessage(GlobalObject.GLOBAL_MESSAGE.HE_JOIN_GUILD_UPPER_LIMIT);
 						return result;
 					}
 					
@@ -341,7 +343,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 					if(userCount >= GlobalConfig.MAX_GUILD_MEMBER_COUNT)
 					{
 						result.setCode(ReturnCode.GUILD_MEMBER_FULL);
-						result.setMessage("您的公会已到达人数上限");
+						result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_MEMBER_FULL);
 						return result;
 					}
 					
@@ -350,7 +352,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 					if(exists)
 					{
 						result.setCode(ReturnCode.GUILD_MEMBER_EXISTS);
-						result.setMessage(GlobalObject.GLOBAL_MESSAGE.GUILD_MEMBER_EXISTS);
+						result.setMessage(GlobalObject.GLOBAL_MESSAGE.HE_JOINED_GUILD_ALREADY);
 						return result;
 					}
 				}

@@ -230,9 +230,11 @@ public class GlobalObject
 		GLOBAL_MESSAGE.NO_PRIVILEGE_TO_DEL_GROUP_USER = configurations.getProperty("no_privilege_to_del_group_user");
 		GLOBAL_MESSAGE.GUILD_MEMBER_FULL = configurations.getProperty("guild_member_full");
 		GLOBAL_MESSAGE.USER_JOIN_GUILD_UPPER_LIMIT = configurations.getProperty("user_join_guild_upper_limit");
+		GLOBAL_MESSAGE.HE_JOIN_GUILD_UPPER_LIMIT = configurations.getProperty("he_join_guild_upper_limit");
 		GLOBAL_MESSAGE.GUILD_GROUP_NOT_EXISTS = configurations.getProperty("guild_group_not_exists");
 		GLOBAL_MESSAGE.GUILD_RECRUIT_NOT_EXISTS = configurations.getProperty("guild_recruit_not_exists");
 		GLOBAL_MESSAGE.GUILD_MEMBER_EXISTS = configurations.getProperty("guild_member_exists");
+		GLOBAL_MESSAGE.HE_JOINED_GUILD_ALREADY = configurations.getProperty("he_joined_guild_already");
 		GLOBAL_MESSAGE.GUILD_GROUP_MEMBER_EXISTS = configurations.getProperty("guild_group_member_exists");
 		GLOBAL_MESSAGE.GUILD_UNAUDIT_MEMBER_EXISTS = configurations.getProperty("guild_unaudit_member_exists");
 		GLOBAL_MESSAGE.USER_QUIT_JOIN_GUILD_LIMIT = configurations.getProperty("user_quit_join_guild_limit");

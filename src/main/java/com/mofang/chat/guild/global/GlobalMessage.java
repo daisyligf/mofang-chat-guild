@@ -104,9 +104,14 @@ public class GlobalMessage
 	public String GUILD_MEMBER_FULL;
 	
 	/**
-	 * 用户加入的公会数以到达上限
+	 * 您加入的公会数已到达上限
 	 */
 	public String USER_JOIN_GUILD_UPPER_LIMIT;
+	
+	/**
+	 * 对方加入的公会数已到达上限
+	 */
+	public String HE_JOIN_GUILD_UPPER_LIMIT;
 	
 	/**
 	 * 公会群组不存在
@@ -122,6 +127,11 @@ public class GlobalMessage
 	 * 公会成员已存在
 	 */
 	public String GUILD_MEMBER_EXISTS;
+	
+	/**
+	 * 对方已加入该公会
+	 */
+	public String HE_JOINED_GUILD_ALREADY;
 	
 	/**
 	 * 公会群组成员已存在
