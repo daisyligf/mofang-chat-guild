@@ -57,6 +57,7 @@ public class GuildGameServiceImpl implements GuildGameService
 	private GuildGroupUserDao guildGroupUserDao = GuildGroupUserDaoImpl.getInstance();
 	private ResultCacheRedis resultCacheRedis = ResultCacheRedisImpl.getInstance();
 	private GuildService guildService = GuildServiceImpl.getInstance();
+	private GameComponent gameComponent = GameComponent.getInstance();
 	
 	private GuildGameServiceImpl()
 	{}
@@ -127,7 +128,7 @@ public class GuildGameServiceImpl implements GuildGameService
 					guildGameGroup.setAvatar("");
 					guildGameGroup.setCreateTime(new Date());
 					///构建游戏群组名称
-					Game gameInfo = GameComponent.getInfo(gameId);
+					Game gameInfo = gameComponent.getInfo(gameId);
 					if(null != gameInfo)
 					{
 						String groupName = guildName + gameInfo.getGameName() + "聊天群";
@@ -160,7 +161,7 @@ public class GuildGameServiceImpl implements GuildGameService
 						gameIds.add(Integer.parseInt(gameIdStr));
 				}
 				
-				SolrInputDocument solrDoc = GuildServiceImpl.convertToSolrDoc(guild, gameIds);
+				SolrInputDocument solrDoc = guildService.convertToSolrDoc(guild, gameIds);
 				IndexComponent.add(solrDoc);
 			}
 		}

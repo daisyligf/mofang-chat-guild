@@ -38,6 +38,7 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		GlobalConfig.LOG4J_CONFIG_PATH = config.get("conf", "log4j_config_path");
 		GlobalConfig.HTTP_CLIENT_API_CONFIG_PATH = config.get("conf", "http_client_api_config_path");
 		GlobalConfig.HTTP_CLIENT_CHATSERVICE_CONFIG_PATH = config.get("conf", "http_client_chatservice_config_path");
+		GlobalConfig.HTTP_CLIENT_TASKSERVICE_CONFIG_PATH = config.get("conf", "http_client_taskservice_config_path");
 		
 		
 		GlobalConfig.GUILD_ID_START = Long.parseLong(config.get("logic", "guild_id_start"));
@@ -62,6 +63,7 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		GlobalConfig.MIN_QUIT_JOIN_GUILD_HOURS = config.getInt("logic", "min_quit_join_guild_hours");
 		
 		GlobalConfig.USER_INFO_URL = config.get("api", "user_info_url");
+		GlobalConfig.TASK_EXEC_URL = config.get("api", "task_exec_url");
 		GlobalConfig.GAME_INFO_URL = config.get("api", "game_info_url");
 		GlobalConfig.GUILD_GIFT_COUNT_URL = config.get("api", "guild_gift_count_url");
 		GlobalConfig.GUILD_GAME_GIFT_COUNT_URL = config.get("api", "guild_game_gift_count_url");

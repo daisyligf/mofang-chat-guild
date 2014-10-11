@@ -1,5 +1,8 @@
 package com.mofang.chat.guild.service;
 
+import java.util.List;
+
+import org.apache.solr.common.SolrInputDocument;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,4 +34,6 @@ public interface GuildService
 	public JSONObject getStatData(long guildId) throws Exception;
 	
 	public void updateDismissTime(long guildId) throws Exception;
+	
+	public SolrInputDocument convertToSolrDoc(Guild model, List<Integer> gameIds) throws Exception;
 }

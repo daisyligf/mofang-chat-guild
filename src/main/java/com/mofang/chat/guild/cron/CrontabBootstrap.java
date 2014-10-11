@@ -12,12 +12,6 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import com.mofang.chat.guild.cron.task.GuildDismissTask;
-import com.mofang.chat.guild.cron.task.GuildNewMemberCountClearTask;
-import com.mofang.chat.guild.cron.task.GuildUnloginMemberCount30DaysUpdateTask;
-import com.mofang.chat.guild.cron.task.GuildUnloginMemberCount7DaysUpdateTask;
-import com.mofang.chat.guild.cron.task.HotGuildRankUpdateTask;
-import com.mofang.chat.guild.cron.task.NewGuildListUpdateTask;
 import com.mofang.chat.guild.global.GlobalConfig;
 import com.mofang.chat.guild.global.GlobalObject;
 
@@ -47,7 +41,16 @@ public class CrontabBootstrap implements Runnable
 			    Runnable task = (Runnable) Class.forName(className).newInstance();
 			    String startTime = obj.elementText("startTime");
 			    boolean startup = Boolean.parseBoolean(obj.elementText("startup"));
-			    TaskEntity taskEntity = buildTask(startTime, task);
+			    
+			    String type = obj.elementText("type");
+			    if (type == null) break;
+			    long period = 24 * 60 * 60 * 1000;
+			    if (type.equals("interval")) 
+			    {
+				period = Long.valueOf(obj.elementText("period")) * 1000;
+			    }
+			    
+			    TaskEntity taskEntity = buildTask(startTime, period, task);
 			    if (startup)
 			    {
 				cron.add(taskEntity);
@@ -63,80 +66,17 @@ public class CrontabBootstrap implements Runnable
 		}
 	}
 	
-	/**
-	 * 构建解散公会的定时任务
-	 * @return
-	 */
-	private TaskEntity buildGuildDismissTask()
-	{
-		String startTime = GlobalConfig.GUILD_DISMISS_TASK_TIME;
-		Runnable task = new GuildDismissTask();
-		return buildTask(startTime, task);
-	}
-	
-	/**
-	 * 构建火热公会排名更新的定时任务
-	 * @return
-	 */
-	private TaskEntity buildHotGuildRankUpdateTask()
-	{
-		String startTime = GlobalConfig.HOT_GUILD_RANK_UPDATE_TASK_TIME;
-		Runnable task = new HotGuildRankUpdateTask();
-		return buildTask(startTime, task);
-	}
-	
-	/**
-	 * 构建新锐公会列表更新的定时任务
-	 * @return
-	 */
-	private TaskEntity buildNewGuildListUpdateTask()
-	{
-	    	String startTime = GlobalConfig.NEW_GUILD_LIST_UPDATE_TASK_TIME;
-	    	Runnable task = new NewGuildListUpdateTask();
-	    	return buildTask(startTime, task);
-	}
-	
-	/**
-	 * 构建清空公会今日新增用户数的定时任务
-	 * @return
-	 */
-	private TaskEntity buildGuildNewMemberCountClearTask()
-	{
-		String startTime = GlobalConfig.GUILD_NEW_MEMBER_COUNT_CLEAR_TASK_TIME;
-		Runnable task = new GuildNewMemberCountClearTask();
-		return buildTask(startTime, task);
-	}
-	
-	/**
-	 * 构建更新公会7天未登录用户数的定时任务
-	 * @return
-	 */
-	private TaskEntity buildGuildUnloginMemberCount7DaysUpdateTask()
-	{
-		String startTime = GlobalConfig.GUILD_UNLOGIN_MEMBER_COUNT_7DAYS_CLEAR_TASK_TIME;
-		Runnable task = new GuildUnloginMemberCount7DaysUpdateTask();
-		return buildTask(startTime, task);
-	}
-	
-	/**
-	 * 构建更新公会30天未登录用户数的定时任务
-	 * @return
-	 */
-	private TaskEntity buildGuildUnloginMemberCount30DaysUpdateTask()
-	{
-		String startTime = GlobalConfig.GUILD_UNLOGIN_MEMBER_COUNT_30DAYS_CLEAR_TASK_TIME;
-		Runnable task = new GuildUnloginMemberCount30DaysUpdateTask();
-		return buildTask(startTime, task);
-	}
-	
-	private TaskEntity buildTask(String startTime, Runnable task)
+	private TaskEntity buildTask(String startTime, long period, Runnable task)
 	{
 		TaskEntity entity = new TaskEntity();
-		long oneDay = 24 * 60 * 60 * 1000;  
-	    long initDelay  = getTimeMillis(startTime) - System.currentTimeMillis();  
-	    initDelay = initDelay > 0 ? initDelay : oneDay + initDelay;  
+		long initDelay = 0L;
+		if (!startTime.equals("0")) {
+		    initDelay  = getTimeMillis(startTime) - System.currentTimeMillis();  
+		    initDelay = initDelay > 0 ? initDelay : period + initDelay; 
+		}
+	     
 		entity.setInitialDelay(initDelay);
-		entity.setPeriod(oneDay);
+		entity.setPeriod(period);
 		entity.setUnit(TimeUnit.MILLISECONDS);
 		entity.setTask(task);
 		return entity;

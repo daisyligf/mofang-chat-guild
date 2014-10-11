@@ -40,6 +40,21 @@ public class ResultCacheRedisImpl implements ResultCacheRedis
 		};
 		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
 	}
+	
+	@Override
+	public boolean saveCache(final String key, final String value) throws Exception
+	{
+	    	RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+		{
+			@Override
+			public Boolean execute(Jedis jedis) throws Exception 
+			{
+				jedis.set(key, value);
+				return true;
+			}
+		};
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+	}
 
 	@Override
 	public boolean deleteCache(String key) throws Exception

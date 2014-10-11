@@ -29,7 +29,6 @@ public class GuildUserListUpdateExecutor implements Runnable {
     public void run() {
 	try 
 	{
-
 	    long start = System.currentTimeMillis();
 	    List<Long> guildIds = guildDao.getNormalGuildIds();
 	    JSONArray data = null;

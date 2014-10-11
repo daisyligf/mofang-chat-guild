@@ -88,6 +88,7 @@ public class GuildServiceImpl implements GuildService
 	private GuildRecruitDao guildRecruitDao = GuildRecruitDaoImpl.getInstance();
 	private GuildGroupMessageRedis guildGroupMessageRedis = GuildGroupMessageRedisImpl.getInstance();
 	private ResultCacheRedis resultCacheRedis = ResultCacheRedisImpl.getInstance();
+	private GameComponent gameComponent = GameComponent.getInstance();
 	
 	private GuildServiceImpl()
 	{}
@@ -181,7 +182,7 @@ public class GuildServiceImpl implements GuildService
 				guildGameGroup.setAvatar("");
 				guildGameGroup.setCreateTime(new Date());
 				///构建游戏群组名称
-				Game gameInfo = GameComponent.getInfo(gameId);
+				Game gameInfo = gameComponent.getInfo(gameId);
 				if(null != gameInfo)
 				{
 					String groupName = model.getGuildName() + gameInfo.getGameName() + "聊天群";
@@ -474,7 +475,7 @@ public class GuildServiceImpl implements GuildService
 				gameJson.put("id", gameId);
 				
 				///获取游戏基本信息
-				game = GameComponent.getInfo(gameId);
+				game = gameComponent.getInfo(gameId);
 				if(null != game)
 				{
 					gameJson.put("name", game.getGameName());
@@ -699,7 +700,7 @@ public class GuildServiceImpl implements GuildService
 		return data;
 	}
 	
-	public static SolrInputDocument convertToSolrDoc(Guild model, List<Integer> gameIds) throws Exception
+	public SolrInputDocument convertToSolrDoc(Guild model, List<Integer> gameIds) throws Exception
 	{
 		String gameList = "";
 		StringBuilder games = new StringBuilder();
@@ -708,7 +709,7 @@ public class GuildServiceImpl implements GuildService
 			Game game = null;
 			for(Integer gameId : gameIds)
 			{
-				game = GameComponent.getInfo(gameId);
+				game = gameComponent.getInfo(gameId);
 				if(null != game)
 					games.append(game.getGameName() + ",");
 			}

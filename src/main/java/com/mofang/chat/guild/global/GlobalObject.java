@@ -71,6 +71,11 @@ public class GlobalObject
 	public static CloseableHttpClient HTTP_CLIENT_CHATSERVICE;
 	
 	/**
+	 * Global TaskService Http Client Instance
+	 */
+	public static CloseableHttpClient HTTP_CLIENT_TASKSERVICE;
+	
+	/**
 	 * Global Info Logger Instance 
 	 */
 	public final static Logger INFO_LOG = Logger.getLogger("guild.info");
@@ -203,6 +208,20 @@ public class GlobalObject
         	throw e;
         }
 	}
+	
+	public static void initTaskServiceHttpClient(String configPath) throws Exception
+	{
+        try
+        {
+        	HttpClientProvider provider = getHttpClientProvider(configPath);
+			HTTP_CLIENT_TASKSERVICE = provider.getHttpClient();
+        }
+        catch(Exception e)
+        {
+        	throw e;
+        }
+	}
+	
 	
 	public static void initGlobalMessage(String configPath) throws Exception
 	{

@@ -29,6 +29,8 @@ public class GlobalConfig
 	
 	public static String HTTP_CLIENT_CHATSERVICE_CONFIG_PATH;
 	
+	public static String HTTP_CLIENT_TASKSERVICE_CONFIG_PATH;
+	
 	public static long GUILD_ID_START;
 	
 	public static long GUILD_GROUP_ID_START;
@@ -70,6 +72,8 @@ public class GlobalConfig
 	public static int MIN_QUIT_JOIN_GUILD_HOURS;
 	
 	public static String USER_INFO_URL;
+	
+	public static String TASK_EXEC_URL;
 	
 	public static String GAME_INFO_URL;
 	

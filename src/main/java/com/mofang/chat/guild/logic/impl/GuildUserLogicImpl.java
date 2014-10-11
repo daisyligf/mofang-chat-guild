@@ -7,6 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.mofang.chat.guild.component.TaskExecComponent;
 import com.mofang.chat.guild.global.GlobalConfig;
 import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.global.ResultValue;
@@ -15,6 +16,7 @@ import com.mofang.chat.guild.global.common.GuildUserAuditType;
 import com.mofang.chat.guild.global.common.GuildUserRole;
 import com.mofang.chat.guild.global.common.GuildUserStatus;
 import com.mofang.chat.guild.global.common.GuildUserUnloginType;
+import com.mofang.chat.guild.global.common.TaskExecCode;
 import com.mofang.chat.guild.logic.GuildUserLogic;
 import com.mofang.chat.guild.model.Guild;
 import com.mofang.chat.guild.model.GuildUser;
@@ -41,6 +43,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 	private GuildUserRedis guildUserRedis = GuildUserRedisImpl.getInstance();
 	private GuildUserDao guildUserDao = GuildUserDaoImpl.getInstance();
 	private GuildUserService guildUserService = GuildUserServiceImpl.getInstance();
+	private TaskExecComponent taskExecComponent = TaskExecComponent.getInstance();
 	private final static long minQuitJoinGuildTime = GlobalConfig.MIN_QUIT_JOIN_GUILD_HOURS * 60 * 60 * 1000;
 	
 	private GuildUserLogicImpl()
@@ -164,7 +167,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			guildUserService.join(model);
 			
 			///异步执行任务接口
-			
+			taskExecComponent.exec(userId, TaskExecCode.JOIN_GUILD);
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
 			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);

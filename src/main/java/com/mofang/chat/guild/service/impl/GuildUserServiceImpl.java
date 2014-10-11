@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mofang.chat.guild.component.NotifyPushComponent;
+import com.mofang.chat.guild.component.UpdateGuildUserListComponent;
 import com.mofang.chat.guild.component.UserComponent;
 import com.mofang.chat.guild.entity.User;
 import com.mofang.chat.guild.global.GlobalConfig;
@@ -50,6 +51,7 @@ public class GuildUserServiceImpl implements GuildUserService
 	private GuildGroupUserDao guildGroupUserDao = GuildGroupUserDaoImpl.getInstance();
 	private GuildGameRedis guildGameRedis = GuildGameRedisImpl.getInstance();
 	private ResultCacheRedis resultCacheRedis = ResultCacheRedisImpl.getInstance();
+	private UpdateGuildUserListComponent updateGuildUserListComponent = UpdateGuildUserListComponent.getInstance();
 	
 	private GuildUserServiceImpl()
 	{}
@@ -67,6 +69,8 @@ public class GuildUserServiceImpl implements GuildUserService
 			///保存公会成员信息
 			guildUserRedis.add(model);
 			guildUserDao.add(model);
+			
+			updateGuildUserListComponent.updateAll(model.getGuildId());
 			
 			///发送申请加入公会通知
 			NotifyPushComponent.applyGuild(model.getUserId(), model.getGuildId());
@@ -86,6 +90,8 @@ public class GuildUserServiceImpl implements GuildUserService
 			///更新用户角色
 			guildUserRedis.updateRole(guildId, userId, role);
 			guildUserDao.updateRole(guildId, userId, role);
+			
+			updateGuildUserListComponent.updateAll(guildId);
 			
 			///发送角色变更通知
 			if(role == GuildUserRole.ADMIN)   ///升为管理员
@@ -144,6 +150,8 @@ public class GuildUserServiceImpl implements GuildUserService
 					}
 				}
 			}
+			
+			updateGuildUserListComponent.updateAll(guildId);
 			
 			///发送删除公会用户通知
 			if(event == 1)  ///会员主动退出公会
@@ -205,6 +213,7 @@ public class GuildUserServiceImpl implements GuildUserService
 				///变更公会今日新增用户数
 				guildUserRedis.incrNewMemberCount(guildId);
 				
+				updateGuildUserListComponent.updateAll(guildId);
 				///发送加入公会通知
 				NotifyPushComponent.joinGuild(applyUid, guildId);
 			}

@@ -13,12 +13,14 @@ import org.json.JSONObject;
 import com.mofang.chat.guild.component.GiftComponent;
 import com.mofang.chat.guild.component.SearchComponent;
 import com.mofang.chat.guild.component.SensitiveWordsComponent;
+import com.mofang.chat.guild.component.TaskExecComponent;
 import com.mofang.chat.guild.global.GlobalConfig;
 import com.mofang.chat.guild.global.GlobalObject;
 import com.mofang.chat.guild.global.ResultValue;
 import com.mofang.chat.guild.global.ReturnCode;
 import com.mofang.chat.guild.global.common.GuildInformStatus;
 import com.mofang.chat.guild.global.common.GuildStatus;
+import com.mofang.chat.guild.global.common.TaskExecCode;
 import com.mofang.chat.guild.logic.GuildLogic;
 import com.mofang.chat.guild.model.Guild;
 import com.mofang.chat.guild.model.GuildInform;
@@ -49,6 +51,7 @@ public class GuildLogicImpl implements GuildLogic
 	private GuildUserRedis guildUserRedis = GuildUserRedisImpl.getInstance();
 	private GuildInformDao guildInformDao = GuildInformDaoImpl.getInstance();
 	private GuildService guildService = GuildServiceImpl.getInstance();
+	private TaskExecComponent taskExecComponent = TaskExecComponent.getInstance();
 	
 	private ReentrantLock lock = new ReentrantLock();
 	
@@ -159,12 +162,14 @@ public class GuildLogicImpl implements GuildLogic
 			    }
 			    // /保存公会
 			    guildService.create(model, games);
+			    
 			}
 			finally 
 			{
 			    lock.unlock();
 			}
 			
+			taskExecComponent.exec(userId, TaskExecCode.JOIN_GUILD);
 			///返回结果
 			result.setCode(ReturnCode.SUCCESS);
 			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);

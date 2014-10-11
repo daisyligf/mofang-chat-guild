@@ -4,36 +4,50 @@
 		<name>guildDismissTask</name>
 		<class>com.mofang.chat.guild.cron.task.GuildDismissTask</class>
 		<startTime>15:17:20</startTime>
+		<type>day</type>
 		<startup>true</startup>
 	</task>
 	<task>
 		<name>hotGuildRankUpdateTask</name>
 		<class>com.mofang.chat.guild.cron.task.HotGuildRankUpdateTask</class>
 		<startTime>15:24:00</startTime>
+		<type>day</type>
 		<startup>true</startup>
 	</task>
 	<task>
 		<name>newGuildListUpdateTask</name>
 		<class>com.mofang.chat.guild.cron.task.NewGuildListUpdateTask</class>
 		<startTime>15:26:00</startTime>
+		<type>day</type>
 		<startup>true</startup>
 	</task>
 	<task>
 		<name>newMemberCountClearTask</name>
 		<class>com.mofang.chat.guild.cron.task.GuildNewMemberCountClearTask</class>
 		<startTime>15:28:00</startTime>
+		<type>day</type>
 		<startup>true</startup>
 	</task>
 	<task>
 		<name>unloginMemberCount7DaysUpdateTask</name>
 		<class>com.mofang.chat.guild.cron.task.GuildUnloginMemberCount7DaysUpdateTask</class>
 		<startTime>15:30:00</startTime>
+		<type>day</type>
 		<startup>true</startup>
 	</task>
 	<task>
 		<name>unloginMemberCount30DaysUpdateTask</name>
 		<class>com.mofang.chat.guild.cron.task.GuildUnloginMemberCount30DaysUpdateTask</class>
 		<startTime>15:32:00</startTime>
+		<type>day</type>
+		<startup>true</startup>
+	</task>
+	<task>
+		<name>guildUserListUpdateExecutor</name>
+		<class>com.mofang.chat.guild.cron.task.GuildUserListUpdateExecutor</class>
+		<startTime>0</startTime>
+		<type>interval</type>
+		<period>3600</period>
 		<startup>true</startup>
 	</task>
 </tasklist>
