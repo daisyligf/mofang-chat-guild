@@ -91,4 +91,10 @@ public class ReturnCode
 	 * 会长不能退出公会
 	 */
 	public final static int GUILD_CREATOR_CAN_NOT_QUIT = 923;
+	
+	/**
+	 * 公会热词已存在
+	 */
+	public final static int GUILD_HOTWORD_EXISTS = 924;
+	
 }

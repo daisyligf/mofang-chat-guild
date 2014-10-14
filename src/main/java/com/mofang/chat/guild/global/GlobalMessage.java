@@ -227,5 +227,10 @@ public class GlobalMessage
 	 */
 	public String KEYWORD_CAN_NOT_BE_EMPTY;
 	
+	/**
+	 * 公会热词已存在
+	 */
+	public String GUILD_HOTWORD_EXISTS;
+	
 
 }

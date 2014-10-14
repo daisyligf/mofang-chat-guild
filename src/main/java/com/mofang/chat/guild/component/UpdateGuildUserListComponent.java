@@ -27,6 +27,8 @@ public class UpdateGuildUserListComponent
     
     private static UpdateGuildUserListComponent instance = new UpdateGuildUserListComponent();
     
+    private UpdateGuildUserListComponent() {}
+    
     public static UpdateGuildUserListComponent getInstance()
     {
 	return instance;

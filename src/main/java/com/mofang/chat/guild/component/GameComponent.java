@@ -28,6 +28,8 @@ public class GameComponent
     	private final ExecutorService executorService = Executors.newFixedThreadPool(THREADS);
     	private final static GameComponent instance = new GameComponent();
     	
+    	private GameComponent() {}
+    	
     	public static GameComponent getInstance()
     	{
     	    return instance;

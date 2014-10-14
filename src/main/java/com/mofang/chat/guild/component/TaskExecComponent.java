@@ -25,6 +25,8 @@ public class TaskExecComponent
     
     private static TaskExecComponent instance = new TaskExecComponent();
     
+    private TaskExecComponent() {}
+    
     public static TaskExecComponent getInstance()
     {
 	return instance;

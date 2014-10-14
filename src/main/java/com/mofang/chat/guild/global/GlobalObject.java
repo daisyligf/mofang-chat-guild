@@ -273,6 +273,7 @@ public class GlobalObject
 		GLOBAL_MESSAGE.OP_TYPE_INVALID = configurations.getProperty("op_type_invalid");
 		GLOBAL_MESSAGE.LIST_TYPE_INVALID = configurations.getProperty("list_type_invalid");
 		GLOBAL_MESSAGE.KEYWORD_CAN_NOT_BE_EMPTY = configurations.getProperty("keyword_can_not_be_empty");
+		GLOBAL_MESSAGE.GUILD_HOTWORD_EXISTS = configurations.getProperty("guild_hotword_exists");
 	    }
 	    catch(Exception e)
 	    {

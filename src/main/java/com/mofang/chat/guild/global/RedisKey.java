@@ -219,4 +219,9 @@ public class RedisKey
 	 * 用户最近依次退出公会时间记录列表
 	 */
 	public final static String GUILD_USER_QUIT_TIME_LIST_KEY = "guild_user_quit_time_list";
+	
+	/**
+	 * 公会热词列表
+	 */
+	public final static String GUILD_HOTWORD_LIST_KEY = "guild_hotword_list";
 }
