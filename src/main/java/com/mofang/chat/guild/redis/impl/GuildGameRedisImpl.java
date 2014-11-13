@@ -138,4 +138,21 @@ public class GuildGameRedisImpl implements GuildGameRedis
 		};
 		return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
+	
+	@Override
+	public boolean saveGuildHotRank(final int gameId, final long guildId, final long rank) throws Exception
+	{
+	    	RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+		{
+			@Override
+			public Boolean execute(Jedis jedis) throws Exception
+			{
+			    	String key = RedisKey.GAME_GUILD_LIST_KEY_PREFIX + gameId;
+			    	jedis.zadd(key, rank, guildId + "");
+			    	return true;
+			}
+		};
+	    	return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker); 
+	}
+	
 }

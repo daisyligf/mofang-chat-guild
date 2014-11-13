@@ -2,11 +2,13 @@ package com.mofang.chat.guild.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.solr.common.SolrInputDocument;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mofang.chat.guild.component.GameComponent;
@@ -30,11 +32,13 @@ import com.mofang.chat.guild.redis.GuildGameRedis;
 import com.mofang.chat.guild.redis.GuildGroupRedis;
 import com.mofang.chat.guild.redis.GuildGroupUserRedis;
 import com.mofang.chat.guild.redis.GuildRedis;
+import com.mofang.chat.guild.redis.GuildUserRedis;
 import com.mofang.chat.guild.redis.ResultCacheRedis;
 import com.mofang.chat.guild.redis.impl.GuildGameRedisImpl;
 import com.mofang.chat.guild.redis.impl.GuildGroupRedisImpl;
 import com.mofang.chat.guild.redis.impl.GuildGroupUserRedisImpl;
 import com.mofang.chat.guild.redis.impl.GuildRedisImpl;
+import com.mofang.chat.guild.redis.impl.GuildUserRedisImpl;
 import com.mofang.chat.guild.redis.impl.ResultCacheRedisImpl;
 import com.mofang.chat.guild.service.GuildGameService;
 import com.mofang.chat.guild.service.GuildService;
@@ -50,6 +54,7 @@ public class GuildGameServiceImpl implements GuildGameService
 	private final static GuildGameServiceImpl SERVICE = new GuildGameServiceImpl();
 	private GuildRedis guildRedis = GuildRedisImpl.getInstance();
 	private GuildGameRedis guildGameRedis = GuildGameRedisImpl.getInstance();
+	private GuildUserRedis guildUserRedis = GuildUserRedisImpl.getInstance();
 	private GuildGameDao guildGameDao = GuildGameDaoImpl.getInstance();
 	private GuildGroupRedis guildGroupRedis = GuildGroupRedisImpl.getInstance();
 	private GuildGroupDao guildGroupDao = GuildGroupDaoImpl.getInstance();
@@ -242,5 +247,75 @@ public class GuildGameServiceImpl implements GuildGameService
 		///存入缓存中
 		resultCacheRedis.saveCache(cacheKey, data.toString(), GlobalConfig.GAME_GUILD_LIST_EXPIRE);
 		return data;
+	}
+	
+	public JSONObject getHotGuildList(int gameId) throws Exception
+	{
+	    	int start = 0;
+	    	int end = 1000;
+	    	Set<String> guildIds = guildGameRedis.getGuildListByGame(gameId, start, end);
+	    	// 如果游戏关联的公会数小于等于2，则直接返回所有的公会
+	    	if (guildIds == null || guildIds.size() <= 2)
+	    	{
+	    	    	return handleGameHotGuilds(guildIds);
+	    	}
+	    	
+	    	for(String guildId : guildIds) 
+	    	{
+	    	    	long rank = guildRedis.getRank(Long.parseLong(guildId));
+	    	    	// 把rank保存到GameGuildList
+	    	    	guildGameRedis.saveGuildHotRank(gameId, Long.parseLong(guildId), rank);
+	    	}
+	    	
+	    	Set<String> hotGuildIds = guildGameRedis.getGuildListByGame(gameId, start, end);
+	    	Object[] hotGuildIdsArray = hotGuildIds.toArray();
+	    	// 为了去重
+	    	Set<String> recomGuildIds = new HashSet<String>();
+	    	
+	    	while (recomGuildIds.size() < 2) 
+	    	{
+	    	    	int randomInt = (int)(Math.random() * hotGuildIds.size());
+	    	    	String guildIdString = String.valueOf(hotGuildIdsArray[randomInt]);
+	    	    	long guildId = Long.valueOf(guildIdString);
+	    	    
+	    	    	///判断公会的成员数是否已到达上限
+	    	    	long userCount = guildUserRedis.getUserCount(guildId);
+	    	    	if (userCount < GlobalConfig.MAX_GUILD_MEMBER_COUNT) 
+	    	    	{
+	    	    	    recomGuildIds.add(guildIdString);
+	    	    	}
+	    	}
+	    	
+	    	JSONObject data = handleGameHotGuilds(recomGuildIds);
+	    	
+	    	return data;
+	}
+
+	private JSONObject handleGameHotGuilds(
+		Set<String> recomGuildIds) throws Exception, JSONException {
+	    	JSONObject data = new JSONObject();
+	    	if (recomGuildIds == null || recomGuildIds.size() == 0) 
+	    	{
+			data.put("total", 0);
+			data.put("guilds", new JSONArray());
+			return data;
+	    	}
+		
+	    	JSONArray guildJsonArray = new JSONArray();
+	    	for (String guildIdString : recomGuildIds) 
+	    	{
+	        	Guild guild = guildRedis.getInfo(Long.valueOf(guildIdString));
+	        	JSONObject guildJson = guild.toJson();
+	        	
+	        	long guildId = guild.getGuildId();
+	        	long memberCount = guildUserRedis.getUserCount(guildId);
+	        	guildJson.put("member_count", memberCount);
+	        	guildJson.put("upper_count", GlobalConfig.MAX_GUILD_MEMBER_COUNT);
+	        	guildJsonArray.put(guildJson);
+	    	}
+	    
+	    	data.put("total", guildJsonArray.length());
+	    	data.put("guilds", guildJsonArray);
+	    	return data;
 	}
 }

@@ -24,6 +24,7 @@ public class UpdateGuildUserListComponent
 {
     private final static int THREADS = Runtime.getRuntime().availableProcessors() + 1;
     private final ExecutorService executorService = Executors.newFixedThreadPool(THREADS);
+    private final static UserComponent userComponent = UserComponent.getInstance();
     
     private static UpdateGuildUserListComponent instance = new UpdateGuildUserListComponent();
     
@@ -108,7 +109,7 @@ public class UpdateGuildUserListComponent
 			json.put("uid", userId);
 			
 			///获取用户基本信息
-			User user = UserComponent.getInfo(userId);
+			User user = userComponent.getInfo(userId);
 			if(null != user)
 			{
 				json.put("nickname", user.getNickName());

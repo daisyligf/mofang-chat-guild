@@ -30,6 +30,8 @@ public class NotifyPushComponent
 {
 	private final static int PUSH_THREADS = Runtime.getRuntime().availableProcessors() + 1;
 	private final static ExecutorService PUSH_EXECUTOR = Executors.newFixedThreadPool(PUSH_THREADS);
+	private final static String clickUrlBase = "http://share.mofang.com/guild";
+	private final static UserComponent userComponent = UserComponent.getInstance();
 	
 	/**
 	 * 发送会长解散公会通知
@@ -47,7 +49,7 @@ public class NotifyPushComponent
 				{
 					final String msgCategory = "dismiss_guild";
 					long creatorId = guild.getCreatorId();
-					User chairman = UserComponent.getInfo(creatorId);
+					User chairman = userComponent.getInfo(creatorId);
 					String chairmanName = "";
 					if(null != chairman)
 						chairmanName = chairman.getNickName();
@@ -62,7 +64,7 @@ public class NotifyPushComponent
 						
 						userIdList.add(user.getUserId());
 					}
-					pushNotify(userIdList, msgCategory, title, detail, null);
+					pushNotify(userIdList, msgCategory, title, detail, null, "");
 				}
 				catch(Exception e)
 				{
@@ -93,7 +95,7 @@ public class NotifyPushComponent
 					String detail = "会长大人，由于经营不善，您的公会已经关门大吉了……节哀……";
 					List<Long> userIdList = new ArrayList<Long>();
 					userIdList.add(creatorId);
-					pushNotify(userIdList, msgCategory, title, detail, null);
+					pushNotify(userIdList, msgCategory, title, detail, null, "");
 				}
 				catch(Exception e)
 				{
@@ -136,7 +138,7 @@ public class NotifyPushComponent
 					}
 					
 					///获取申请人信息
-					User userInfo = UserComponent.getInfo(applyUserId);
+					User userInfo = userComponent.getInfo(applyUserId);
 					String nickName = "";
 					if(null != userInfo)
 						nickName = userInfo.getNickName();
@@ -147,6 +149,7 @@ public class NotifyPushComponent
 					JSONObject source = new JSONObject();
 					source.put("guild_id", guildId);
 					
+					String clickAt = clickUrlBase + "guild_id" + guildId;
 					for(GuildUser user : userList)
 					{
 						if(user.getRole() != GuildUserRole.CHAIRMAN && user.getRole() != GuildUserRole.ADMIN)
@@ -155,7 +158,7 @@ public class NotifyPushComponent
 						source.put("role", user.getRole());
 						List<Long> userIdList = new ArrayList<Long>();
 						userIdList.add(user.getUserId());
-						pushNotify(userIdList, msgCategory, title, detail, source);
+						pushNotify(userIdList, msgCategory, title, detail, source, clickAt);
 					}
 				}
 				catch(Exception e)
@@ -193,7 +196,7 @@ public class NotifyPushComponent
 					String detail = "骚年，恭喜你加入" + guildName + "公会，入会后要好好表现哈，被踢很没面子的哈~";
 					List<Long> userIdList = new ArrayList<Long>();
 					userIdList.add(applyUserId);
-					pushNotify(userIdList, msgCategory, title, detail, null);
+					pushNotify(userIdList, msgCategory, title, detail, null, "");
 				}
 				catch(Exception e)
 				{
@@ -230,9 +233,10 @@ public class NotifyPushComponent
 					String detail = "骚年，鉴于你的优秀表现，" + guildName + "的会长大人把你提升为管理员了，快去抖抖威风吧~";
 					JSONObject source = new JSONObject();
 					source.put("guild_id", guildId);
+					String clickAt = clickUrlBase + "?guild_id=" + guildId;
 					List<Long> userIdList = new ArrayList<Long>();
 					userIdList.add(userId);
-					pushNotify(userIdList, msgCategory, title, detail, source);
+					pushNotify(userIdList, msgCategory, title, detail, source, clickAt);
 				}
 				catch(Exception e)
 				{
@@ -268,7 +272,7 @@ public class NotifyPushComponent
 					String detail = "骚年你干了什么！？你在" + guildName + "公会中的管理员职务被会长大人解除了，节哀……";
 					List<Long> userIdList = new ArrayList<Long>();
 					userIdList.add(userId);
-					pushNotify(userIdList, msgCategory, title, detail, null);
+					pushNotify(userIdList, msgCategory, title, detail, null, "");
 				}
 				catch(Exception e)
 				{
@@ -305,7 +309,7 @@ public class NotifyPushComponent
 					String detail = "骚年你干了什么！？你被" + guildName + "公会的会长大人踢出公会了，节哀……";
 					List<Long> userIdList = new ArrayList<Long>();
 					userIdList.add(userId);
-					pushNotify(userIdList, msgCategory, title, detail, null);
+					pushNotify(userIdList, msgCategory, title, detail, null, "");
 				}
 				catch(Exception e)
 				{
@@ -353,7 +357,7 @@ public class NotifyPushComponent
 					}
 					
 					///获取退出公会的用户信息
-					User userInfo = UserComponent.getInfo(userId);
+					User userInfo = userComponent.getInfo(userId);
 					String nickName = "";
 					String gender = "他";
 					if(null != userInfo)
@@ -375,7 +379,7 @@ public class NotifyPushComponent
 						
 						userIdList.add(user.getUserId());
 					}
-					pushNotify(userIdList, msgCategory, title, detail, null);
+					pushNotify(userIdList, msgCategory, title, detail, null, "");
 				}
 				catch(Exception e)
 				{
@@ -406,7 +410,7 @@ public class NotifyPushComponent
 				userIdList.add(userId);
 				String msgCategory = "before_dismiss";
 				    
-				pushNotify(userIdList, msgCategory, title, detail, null);
+				pushNotify(userIdList, msgCategory, title, detail, null, "");
 			    }
 			    catch(Exception e) 
 			    {
@@ -418,7 +422,7 @@ public class NotifyPushComponent
 		PUSH_EXECUTOR.execute(task);
 	}
 	
-	private static void pushNotify(List<Long> userIdList, String msgCategory, String title, String detail, JSONObject source) throws Exception
+	private static void pushNotify(List<Long> userIdList, String msgCategory, String title, String detail, JSONObject source, String clickAct) throws Exception
 	{
 		JSONArray uids = new JSONArray(userIdList);
 		JSONObject pushJson = new JSONObject();
@@ -436,7 +440,7 @@ public class NotifyPushComponent
 		msgJson.put("content", contentJson);
 		pushJson.put("msg", msgJson);
 		pushJson.put("is_show_notify", false);
-		pushJson.put("click_act", "");
+		pushJson.put("click_act", clickAct);
 		
 		///发送通知
 		String result = HttpClientSender.post(GlobalObject.HTTP_CLIENT_CHATSERVICE, GlobalConfig.CHAT_SERVICE_URL, pushJson.toString());

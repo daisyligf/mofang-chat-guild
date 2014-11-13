@@ -89,6 +89,7 @@ public class GuildServiceImpl implements GuildService
 	private GuildGroupMessageRedis guildGroupMessageRedis = GuildGroupMessageRedisImpl.getInstance();
 	private ResultCacheRedis resultCacheRedis = ResultCacheRedisImpl.getInstance();
 	private GameComponent gameComponent = GameComponent.getInstance();
+	private UserComponent userComponent = UserComponent.getInstance();
 	
 	private GuildServiceImpl()
 	{}
@@ -435,7 +436,7 @@ public class GuildServiceImpl implements GuildService
 		///获取会长信息
 		JSONObject chairman = new JSONObject();
 		chairman.put("uid", model.getCreatorId());
-		User user = UserComponent.getInfo(model.getCreatorId());
+		User user = userComponent.getInfo(model.getCreatorId());
 		if(null != user)
 		{
 			chairman.put("nickname", user.getNickName());

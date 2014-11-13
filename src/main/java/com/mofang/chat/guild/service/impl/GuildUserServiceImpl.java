@@ -52,6 +52,7 @@ public class GuildUserServiceImpl implements GuildUserService
 	private GuildGameRedis guildGameRedis = GuildGameRedisImpl.getInstance();
 	private ResultCacheRedis resultCacheRedis = ResultCacheRedisImpl.getInstance();
 	private UpdateGuildUserListComponent updateGuildUserListComponent = UpdateGuildUserListComponent.getInstance();
+	private UserComponent userComponent = UserComponent.getInstance();
 	
 	private GuildUserServiceImpl()
 	{}
@@ -287,7 +288,7 @@ public class GuildUserServiceImpl implements GuildUserService
 			json.put("uid", userId);
 			
 			///获取用户基本信息
-			User user = UserComponent.getInfo(userId);
+			User user = userComponent.getInfo(userId);
 			if(null != user)
 			{
 				json.put("nickname", user.getNickName());

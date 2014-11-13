@@ -67,9 +67,10 @@ public class GameComponent
 	{
 	    private int gameId;
 	    
-	    public GameFutureTask(int gameId) {
-		super();
-		this.gameId = gameId;
+	    public GameFutureTask(int gameId) 
+	    {
+			super();
+			this.gameId = gameId;
 	    }
 
 	    @Override

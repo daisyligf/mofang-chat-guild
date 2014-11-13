@@ -206,4 +206,31 @@ public class GuildGameLogicImpl implements GuildGameLogic
 			throw new Exception("at GuildGameLogicImpl.getGameList throw an error.", e);
 		}
 	}
+	
+	@Override
+	public ResultValue getHotGuilds(HttpRequestContext context) throws Exception
+	{
+	    	ResultValue result = new ResultValue();
+	    	try 
+	    	{
+	    	    	String strGameId = context.getParameters("game_id");
+        	    	if(!StringUtil.isInteger(strGameId) || "0".equals(strGameId))
+        		{
+        			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+        			result.setMessage(GlobalObject.GLOBAL_MESSAGE.GAME_ID_INVALID);
+        			return result;
+        		}
+        	    	int gameId = Integer.parseInt(strGameId);
+        	    	JSONObject data = guildGameService.getHotGuildList(gameId);
+        	    	///返回结果
+			result.setCode(ReturnCode.SUCCESS);
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
+			result.setData(data);
+			return result;
+        	    	
+	    	} catch (Exception e)
+	    	{
+	    	    	throw new Exception("at GuildGameLogicImpl.getHotGuilds throw an error.", e);
+	    	}
+	}
 }

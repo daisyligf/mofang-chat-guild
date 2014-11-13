@@ -22,4 +22,6 @@ public interface GuildGameRedis
 	public Set<String> getGuildListByGame(int gameId, int start, int end) throws Exception;
 	
 	public long getGuildCountByGame(int gameId) throws Exception;
+	
+	public boolean saveGuildHotRank(final int gameId, final long guildId, final long rank) throws Exception;
 }

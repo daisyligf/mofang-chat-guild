@@ -24,6 +24,7 @@ public class GuildUserListUpdateExecutor implements Runnable {
 
     private GuildDao guildDao = GuildDaoImpl.getInstance();
     private GuildUserRedis guildUserRedis = GuildUserRedisImpl.getInstance();
+    private UserComponent userComponent = UserComponent.getInstance();
     
     @Override
     public void run() {
@@ -70,7 +71,7 @@ public class GuildUserListUpdateExecutor implements Runnable {
 			json.put("uid", userId);
 			
 			///获取用户基本信息
-			User user = UserComponent.getInfo(userId);
+			User user = userComponent.getInfo(userId);
 			if(null != user)
 			{
 				json.put("nickname", user.getNickName());

@@ -26,6 +26,7 @@ public class GuildGroupUserServiceImpl implements GuildGroupUserService
 	private final static GuildGroupUserServiceImpl SERVICE = new GuildGroupUserServiceImpl();
 	private GuildGroupUserRedis guildGroupUserRedis = GuildGroupUserRedisImpl.getInstance();
 	private ResultCacheRedis resultCacheRedis = ResultCacheRedisImpl.getInstance();
+	private UserComponent userComponent = UserComponent.getInstance();
 	
 	private GuildGroupUserServiceImpl()
 	{}
@@ -58,7 +59,7 @@ public class GuildGroupUserServiceImpl implements GuildGroupUserService
 			for(String memberIdStr : memberIds.keySet())
 			{
 				memberId = Long.parseLong(memberIdStr);
-				user = UserComponent.getInfo(memberId);
+				user = userComponent.getInfo(memberId);
 				if(null == user)
 					continue;
 				

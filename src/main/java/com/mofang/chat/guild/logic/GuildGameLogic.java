@@ -15,4 +15,6 @@ public interface GuildGameLogic
 	public ResultValue getGuildList(HttpRequestContext context) throws Exception;
 	
 	public ResultValue getGameList(HttpRequestContext context) throws Exception;
+	
+	public ResultValue getHotGuilds(HttpRequestContext context) throws Exception;
 }
