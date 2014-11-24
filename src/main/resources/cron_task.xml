@@ -42,6 +42,7 @@
 		<type>day</type>
 		<startup>true</startup>
 	</task>
+	<!-- 
 	<task>
 		<name>guildUserListUpdateExecutor</name>
 		<class>com.mofang.chat.guild.cron.task.GuildUserListUpdateExecutor</class>
@@ -49,5 +50,5 @@
 		<type>interval</type>
 		<period>3600</period>
 		<startup>true</startup>
-	</task>
+	</task> -->
 </tasklist>

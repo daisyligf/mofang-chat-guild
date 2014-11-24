@@ -70,9 +70,9 @@ public interface GuildUserRedis
 	
 	public long getUserLastQuitGuild(long userId) throws Exception;
 	
-	public boolean saveGuildUserInfoList(long guildId, String value) throws Exception;
-	
-	public boolean deleteGuildUserInfoList(long guildId) throws Exception;
-	
-	public String getGuildUserInfoList(long guildId) throws Exception; 
+//	public boolean saveGuildUserInfoList(long guildId, String value) throws Exception;
+//	
+//	public boolean deleteGuildUserInfoList(long guildId) throws Exception;
+//	
+//	public String getGuildUserInfoList(long guildId) throws Exception; 
 }

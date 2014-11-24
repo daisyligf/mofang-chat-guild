@@ -43,6 +43,7 @@ public class GameComponent
 		String value = cacheRedis.getCache(key);
 		Game game = null;
 		GameFutureTask task = new GameFutureTask(gameId);
+		executorService.submit(task);
 		
 		if(!StringUtil.isNullOrEmpty(value))
 		{
@@ -50,15 +51,10 @@ public class GameComponent
 			game = Game.buildByJson(json);
 		} else 
 		{
-		    	// 主要考虑到初始化的情况
-		    	game = task.getInfoByAPI(gameId);
+	    	// 主要考虑到初始化的情况
+	    	game = task.getInfoByAPI(gameId);
 		}
 		
-		Future<Integer> future = executorService.submit(task);
-		if (future.get() != 0)
-		{
-		    	GlobalObject.ERROR_LOG.error("GameComponent update GameInfo failed.");
-		}
 		return game;
 		
 	}
@@ -85,6 +81,7 @@ public class GameComponent
 		{
 			///保存到redis中
 			cacheRedis.saveCache(key, game.toJson().toString());
+			GlobalObject.INFO_LOG.info(key +  " updated.");
 			return ReturnCode.SUCCESS;
 			
 		}
@@ -96,34 +93,32 @@ public class GameComponent
 		
 	    }
 	    
-	public Game getInfoByAPI(int gameId) 
-	{
-	    String url = GlobalConfig.GAME_INFO_URL + "?id=" + gameId;
-	    try 
-	    {
-		String result = HttpClientSender.get(
-			GlobalObject.HTTP_CLIENT_API, url);
-		JSONObject json = new JSONObject(result);
-		int code = json.optInt("code", -1);
-		if (0 != code)
-		    return null;
-
-		JSONObject data = json.optJSONObject("data");
-		if (null == data)
-		    return null;
-
-		Game game = new Game();
-		game.setGameId(gameId);
-		game.setGameName(data.optString("name", ""));
-		game.setIcon(data.optString("app_icon", ""));
-		return game;
-	    } catch (Exception e) 
-	    {
-		GlobalObject.ERROR_LOG.error(
-			"GameComponent.getInfoByAPI throws an error.", e);
-		return null;
-	    }
-	}
+		public Game getInfoByAPI(int gameId) 
+		{
+		    String url = GlobalConfig.GAME_INFO_URL + "?id=" + gameId;
+		    try 
+		    {
+				String result = HttpClientSender.get(GlobalObject.HTTP_CLIENT_API, url);
+				JSONObject json = new JSONObject(result);
+				int code = json.optInt("code", -1);
+				if (0 != code)
+				    return null;
+		
+				JSONObject data = json.optJSONObject("data");
+				if (null == data)
+				    return null;
+		
+				Game game = new Game();
+				game.setGameId(gameId);
+				game.setGameName(data.optString("name", ""));
+				game.setIcon(data.optString("app_icon", ""));
+				return game;
+		    } catch (Exception e) 
+		    {
+				GlobalObject.ERROR_LOG.error("GameComponent.getInfoByAPI throws an error.", e);
+				return null;
+		    }
+		}
     }
 	
 	

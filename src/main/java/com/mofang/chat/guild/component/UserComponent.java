@@ -3,7 +3,6 @@ package com.mofang.chat.guild.component;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.json.JSONObject;
 
@@ -43,27 +42,17 @@ public class UserComponent {
 		String value = cacheRedis.getCache(key);
 		User user = null;
 		UserFutureTask task = new UserFutureTask(userId);
-		if (!StringUtil.isNullOrEmpty(value)) {
+		executorService.submit(task);
+		
+		if (!StringUtil.isNullOrEmpty(value)) 
+		{
 			JSONObject json = new JSONObject(value);
 			return User.buildByJson(json);
 		} else {
-			// 调用服务端接口获取
 			user = task.getInfoByAPI(userId);
 		}
-
-		Future<Long> future = executorService.submit(task);
-		if (future.get() != 0L)
-		{
-		    GlobalObject.ERROR_LOG.error("UserComponent update UserInfo failed.");
-		}
-
-		try {
-			// /保存到redis中
-			cacheRedis.saveCache(key, user.toJson().toString());
-			return user;
-		} catch (Exception e) {
-			throw e;
-		}
+		
+		return user;
 	}
 
 	public class UserFutureTask implements Callable<Long> 
@@ -86,6 +75,7 @@ public class UserComponent {
 			try {
 				// /保存到redis中
 				cacheRedis.saveCache(key, user.toJson().toString());
+				GlobalObject.INFO_LOG.info(key +  " updated.");
 				return 0L;
 
 			} catch (Exception e) {

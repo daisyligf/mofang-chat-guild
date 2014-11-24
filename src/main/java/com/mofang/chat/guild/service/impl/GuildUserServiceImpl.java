@@ -245,11 +245,11 @@ public class GuildUserServiceImpl implements GuildUserService
 		}
 		
 		// 缓存过期，则从redis存的数据里获取，这个数据1h更新一次
-	    	result = guildUserRedis.getGuildUserInfoList(guildId);
-	    	if (!StringUtil.isNullOrEmpty(result)) {
-	    	    JSONArray data = new JSONArray(result);
-	    	    return data;
-	    	}
+//	    	result = guildUserRedis.getGuildUserInfoList(guildId);
+//	    	if (!StringUtil.isNullOrEmpty(result)) {
+//	    	    JSONArray data = new JSONArray(result);
+//	    	    return data;
+//	    	}
 		/// 缓存过期+redis里还没有创建好，则需要重新构建列表信息，并将结果存入缓存中
 		JSONArray data = new JSONArray();
 		JSONObject userJson = null;

@@ -48,8 +48,8 @@ public class GuildUserListUpdateExecutor implements Runnable {
 			if(null != userJson)
 				data.put(userJson);
 		}
-		guildUserRedis.deleteGuildUserInfoList(guildId);
-		guildUserRedis.saveGuildUserInfoList(guildId, data.toString());
+//		guildUserRedis.deleteGuildUserInfoList(guildId);
+//		guildUserRedis.saveGuildUserInfoList(guildId, data.toString());
 		
 	    }
 	    long end = System.currentTimeMillis();

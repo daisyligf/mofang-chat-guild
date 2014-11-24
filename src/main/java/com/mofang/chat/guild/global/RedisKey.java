@@ -21,7 +21,7 @@ public class RedisKey
 	 * 公会成员详细信息列表结果key前缀
 	 * 结构: guild_user_info_list_{guildid}
 	 */
-	public final static String GUILD_USER_INFO_LIST_KEY_PREFIX = "guild_user_info_list_";
+//	public final static String GUILD_USER_INFO_LIST_KEY_PREFIX = "guild_user_info_list_";
 	
 	/**
 	 * 最热公会列表key(审核已通过)

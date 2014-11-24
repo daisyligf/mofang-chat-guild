@@ -90,8 +90,8 @@ public class UpdateGuildUserListComponent
 			if(null != userJson)
 				data.put(userJson);
 		}
-		guildUserRedis.deleteGuildUserInfoList(guildId);
-		guildUserRedis.saveGuildUserInfoList(guildId, data.toString());
+//		guildUserRedis.deleteGuildUserInfoList(guildId);
+//		guildUserRedis.saveGuildUserInfoList(guildId, data.toString());
 		long end = System.currentTimeMillis();
 		GlobalObject.INFO_LOG.info("GuildUserListUpdator.call cost " + (end-start) +  " ms");
 	    } catch (Exception e)

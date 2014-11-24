@@ -594,33 +594,33 @@ public class GuildUserRedisImpl implements GuildUserRedis
 	    return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
 	
-	public boolean saveGuildUserInfoList(final long guildId, final String value) throws Exception 
-	{
-	    RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
-	    {
-			@Override
-			public Boolean execute(Jedis jedis) throws Exception 
-			{
-			    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
-			    jedis.set(key, value);
-			    return true;
-			}
-	    };
-	    return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
-	}
-	
-	public boolean deleteGuildUserInfoList(long guildId) throws Exception
-	{
-	    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
-	    RedisWorker<Boolean> worker = new DeleteWorker(key);
-	    return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
-	}
-	
-	public String getGuildUserInfoList(long guildId) throws Exception
-	{
-	    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
-	    RedisWorker<String> worker = new GetWorker(key);
-	    return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
-	}
+//	public boolean saveGuildUserInfoList(final long guildId, final String value) throws Exception 
+//	{
+//	    RedisWorker<Boolean> worker = new RedisWorker<Boolean>()
+//	    {
+//			@Override
+//			public Boolean execute(Jedis jedis) throws Exception 
+//			{
+//			    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
+//			    jedis.set(key, value);
+//			    return true;
+//			}
+//	    };
+//	    return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+//	}
+//	
+//	public boolean deleteGuildUserInfoList(long guildId) throws Exception
+//	{
+//	    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
+//	    RedisWorker<Boolean> worker = new DeleteWorker(key);
+//	    return GlobalObject.REDIS_MASTER_EXECUTOR.execute(worker);
+//	}
+//	
+//	public String getGuildUserInfoList(long guildId) throws Exception
+//	{
+//	    String key = RedisKey.GUILD_USER_INFO_LIST_KEY_PREFIX + guildId;
+//	    RedisWorker<String> worker = new GetWorker(key);
+//	    return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+//	}
 	
 }
