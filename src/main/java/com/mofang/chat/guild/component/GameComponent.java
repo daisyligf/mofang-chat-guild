@@ -3,7 +3,6 @@ package com.mofang.chat.guild.component;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.json.JSONObject;
 
@@ -80,6 +79,9 @@ public class GameComponent
 		try
 		{
 			///保存到redis中
+			if (game == null)
+				return -1;
+			
 			cacheRedis.saveCache(key, game.toJson().toString());
 			GlobalObject.INFO_LOG.info(key +  " updated.");
 			return ReturnCode.SUCCESS;
@@ -99,6 +101,8 @@ public class GameComponent
 		    try 
 		    {
 				String result = HttpClientSender.get(GlobalObject.HTTP_CLIENT_API, url);
+				if (result == null)
+					return null;
 				JSONObject json = new JSONObject(result);
 				int code = json.optInt("code", -1);
 				if (0 != code)

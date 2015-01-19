@@ -30,7 +30,7 @@ public class NotifyPushComponent
 {
 	private final static int PUSH_THREADS = Runtime.getRuntime().availableProcessors() + 1;
 	private final static ExecutorService PUSH_EXECUTOR = Executors.newFixedThreadPool(PUSH_THREADS);
-	private final static String clickUrlBase = "http://share.mofang.com/guild";
+	private final static String clickUrlBase = GlobalConfig.CLICK_URL_BASE;
 	private final static UserComponent userComponent = UserComponent.getInstance();
 	
 	/**
@@ -149,7 +149,7 @@ public class NotifyPushComponent
 					JSONObject source = new JSONObject();
 					source.put("guild_id", guildId);
 					
-					String clickAt = clickUrlBase + "guild_id" + guildId;
+					String clickAt = clickUrlBase + "?guild_id=" + guildId;
 					for(GuildUser user : userList)
 					{
 						if(user.getRole() != GuildUserRole.CHAIRMAN && user.getRole() != GuildUserRole.ADMIN)

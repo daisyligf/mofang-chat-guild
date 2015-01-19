@@ -71,6 +71,7 @@ public class GlobalConfigInitializer extends AbstractInitializer
 		GlobalConfig.SOLR_URL = config.get("api", "solr_url");
 		GlobalConfig.CHAT_SERVICE_URL = config.get("api", "chat_service_url");
 		GlobalConfig.SENSITIVE_WORDS_SERVICE_URL = config.get("api", "sensitive_words_service_url");
+		GlobalConfig.CLICK_URL_BASE = config.get("api", "click_url_base");
 		
 		GlobalConfig.GUILD_CHECK_DAYS = config.getInt("task", "guild_check_days");
 		GlobalConfig.GUILD_FIRST_ALARM_DAYS = config.getInt("task", "guild_first_alarm_days");

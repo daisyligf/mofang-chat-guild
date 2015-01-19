@@ -118,4 +118,6 @@ public class GlobalConfig
 	public static String GLOBAL_MESSAGE_PATH;
 	
 	public static String CRON_TASK_CONFIG_PATH;
+	
+	public static String CLICK_URL_BASE;
 }
