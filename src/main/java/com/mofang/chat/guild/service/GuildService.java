@@ -36,4 +36,6 @@ public interface GuildService
 	public void updateDismissTime(long guildId) throws Exception;
 	
 	public SolrInputDocument convertToSolrDoc(Guild model, List<Integer> gameIds) throws Exception;
+
+	public void setNeedAudit(long guildId, int needAudit) throws Exception;
 }

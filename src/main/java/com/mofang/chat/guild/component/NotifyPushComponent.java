@@ -111,7 +111,7 @@ public class NotifyPushComponent
 	 * 会长及管理员接收通知
 	 * @throws Exception
 	 */
-	public static void applyGuild(final long applyUserId, final long guildId) throws Exception
+	public static void applyGuild(final long applyUserId, final long guildId, final int needAudit) throws Exception
 	{
 		Runnable task = new Runnable()
 		{
@@ -144,8 +144,16 @@ public class NotifyPushComponent
 						nickName = userInfo.getNickName();
 					
 					String msgCategory = "apply_join_guild";
-					String title = "大人，您的公会有人希望加入";
-					String detail = "大人安好，" + nickName + "请求你同意加入咱公会，请示下~";
+					String title = "您的公會有人希望加入";
+					String detail = "大人安好，" + nickName + "请求你同意加入咱公會，请示下~";
+					
+					if (needAudit == 0)
+					{
+						title = "大人，有人加入了您的公會";
+						detail = "大人安好，" + nickName + "加入了您的公會~";
+					}
+					
+					
 					JSONObject source = new JSONObject();
 					source.put("guild_id", guildId);
 					
@@ -192,8 +200,8 @@ public class NotifyPushComponent
 						guildName = guildInfo.getGuildName();
 					
 					String msgCategory = "join_guild_success";
-					String title = "骚年，恭喜你加入" + guildName + "公会";
-					String detail = "骚年，恭喜你加入" + guildName + "公会，入会后要好好表现哈，被踢很没面子的哈~";
+					String title = "骚年，恭喜你加入" + guildName + "公會";
+					String detail = "骚年，恭喜你加入" + guildName + "公會，入会后要好好表现哈，被踢很没面子的哈~";
 					List<Long> userIdList = new ArrayList<Long>();
 					userIdList.add(applyUserId);
 					pushNotify(userIdList, msgCategory, title, detail, null, "");
@@ -229,7 +237,7 @@ public class NotifyPushComponent
 						guildName = guildInfo.getGuildName();
 					
 					String msgCategory = "set_member_to_admin";
-					String title = "骚年，恭喜你成为" + guildName + "公会的管理员";
+					String title = "骚年，恭喜你成为" + guildName + "公會的管理员";
 					String detail = "骚年，鉴于你的优秀表现，" + guildName + "的会长大人把你提升为管理员了，快去抖抖威风吧~";
 					JSONObject source = new JSONObject();
 					source.put("guild_id", guildId);

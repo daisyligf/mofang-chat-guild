@@ -382,16 +382,16 @@ public class GuildRedisImpl implements GuildRedis
 	@Override
 	public long getMyCount(final long userId) throws Exception 
 	{
-	    	RedisWorker<Long> worker = new RedisWorker<Long>()
-	    	{
-	    	    @Override
-	    	    public Long execute(Jedis jedis) throws Exception
-	    	    {
-	    		String key = RedisKey.MY_GUILD_LIST_KEY_PREFIX + userId;
-	    		return jedis.zcard(key);
-	    	    }
-	    	};
-	    	return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+    	RedisWorker<Long> worker = new RedisWorker<Long>()
+    	{
+    	    @Override
+    	    public Long execute(Jedis jedis) throws Exception
+    	    {
+    		String key = RedisKey.MY_GUILD_LIST_KEY_PREFIX + userId;
+    		return jedis.zcard(key);
+    	    }
+    	};
+    	return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
 	}
 
 	@Override
@@ -407,5 +407,21 @@ public class GuildRedisImpl implements GuildRedis
 			}
 		};
 		return GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+	}
+	
+	@Override
+	public boolean setNeedAudit(long guildId, int needAudit) throws Exception
+	{
+		String key = RedisKey.GUILD_INFO_KEY_PREFIX + guildId;
+		RedisWorker<String> worker = new GetWorker(key);
+		String value = GlobalObject.REDIS_SLAVE_EXECUTOR.execute(worker);
+		if(StringUtil.isNullOrEmpty(value))
+			return false;
+		
+		JSONObject json = new JSONObject(value);
+		json.put("need_audit", needAudit);
+		
+		RedisWorker<Boolean> setWorker = new SetWorker(key, json.toString());
+		return GlobalObject.REDIS_MASTER_EXECUTOR.execute(setWorker);
 	}
 }

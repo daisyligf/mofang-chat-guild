@@ -64,6 +64,14 @@ public class GuildDaoImpl extends AbstractMysqlSupport<Guild> implements GuildDa
 		strSql.append("update guild set status=" + status + " where guild_id=" + guildId);
 		super.invokeExecute(strSql.toString());
 	}
+	
+	@Override
+	public void setNeedAudit(long guildId, int needAudit) throws Exception
+	{
+		StringBuilder strSql = new StringBuilder();
+		strSql.append("update guild set need_audit=" + needAudit + " where guild_id=" + guildId);
+		super.invokeExecute(strSql.toString());
+	}
 
 	@Override
 	public Guild getInfo(long guildId) throws Exception

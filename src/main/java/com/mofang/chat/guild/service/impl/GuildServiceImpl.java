@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.solr.common.SolrInputDocument;
@@ -139,7 +140,7 @@ public class GuildServiceImpl implements GuildService
 			guildGroup.setGameId(0);
 			guildGroup.setType(GuildGroupType.GUILD);
 			guildGroup.setCreatorId(model.getCreatorId());
-			guildGroup.setGroupName(model.getGuildName() + "公会群");
+			guildGroup.setGroupName(model.getGuildName() + "公會群");
 			guildGroup.setAvatar("");
 			guildGroup.setCreateTime(new Date());
 			guildGroupDao.add(guildGroup);
@@ -419,10 +420,15 @@ public class GuildServiceImpl implements GuildService
 		long memberCount = guildUserRedis.getUserCount(guildId);
 		data.put("member_count", memberCount);
 		int giftCount = GiftComponent.getGuildGiftCount(guildId);
-		int markCount = CheckInComponent.getGuildCheckinNum(guildId);
+		Map<String, Integer> checkinMap = CheckInComponent.getGuildCheckinNum(guildId);
+		int markCount = checkinMap.get("num");
+		int totalMarkCount = checkinMap.get("totalNum");
+		
 		data.put("gift_count", giftCount);
 		data.put("mark_count", markCount);
+		data.put("total_mark_count", totalMarkCount);
 		data.put("role", 0);
+		data.put("need_audit", model.getNeedAudit());
 		
 		// 最新一条已通过的招募信息
 		String content = "";
@@ -686,7 +692,8 @@ public class GuildServiceImpl implements GuildService
 	{
 		long rank = guildRedis.getRank(guildId) + 1; 
 		long memberCount = guildUserRedis.getUserCount(guildId);
-		int markCount = CheckInComponent.getGuildCheckinNum(guildId);
+		Map<String, Integer> checkinMap = CheckInComponent.getGuildCheckinNum(guildId);
+		int markCount = checkinMap.get("num");
 		int newMemberCount = guildUserRedis.getNewMemberCount(guildId);
 		int unloginMemberCount7Days = guildUserRedis.getUnloginMemberCount7Days(guildId);
 		int unloginMemberCount30Days = guildUserRedis.getUnloginMemberCount30Days(guildId);
@@ -730,16 +737,23 @@ public class GuildServiceImpl implements GuildService
 		return appBean;
 	}
 	
-	public void updateDismissTime(long guildId) throws Exception {
+	public void updateDismissTime(long guildId) throws Exception 
+	{
 	    try {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String date = dateFormat.format(new Date());
-		guildDao.updateDismissTime(guildId, date);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String date = dateFormat.format(new Date());
+			guildDao.updateDismissTime(guildId, date);
 	    } catch(Exception e)
 		{
-		GlobalObject.ERROR_LOG.error("at GuildServiceImpl.updateDismissTime throw an error.", e);
-		throw e;
+	    	GlobalObject.ERROR_LOG.error("at GuildServiceImpl.updateDismissTime throw an error.", e);
+	    	throw e;
 		}
 	    
+	}
+	
+	public void setNeedAudit(long guildId, int needAudit) throws Exception
+	{
+		guildDao.setNeedAudit(guildId, needAudit);
+		guildRedis.setNeedAudit(guildId, needAudit);
 	}
 }

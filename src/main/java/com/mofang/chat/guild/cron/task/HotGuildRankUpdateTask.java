@@ -2,6 +2,7 @@ package com.mofang.chat.guild.cron.task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 import com.mofang.chat.guild.component.CheckInComponent;
@@ -52,7 +53,8 @@ public class HotGuildRankUpdateTask implements Runnable
 				
 				///获取公会会员数
 				long memberCount = guildUserRedis.getUserCount(guildId);
-				int markCount = CheckInComponent.getGuildCheckinNum(guildId, lastDate);
+				Map<String, Integer> checkinMap = CheckInComponent.getGuildCheckinNum(guildId, lastDate);
+				int markCount = checkinMap.get("num");
 				
 				///计算公会热度
 				double memberScore = memberCount * GlobalConfig.HOT_GUILD_RANK_MEMBER_RATE;

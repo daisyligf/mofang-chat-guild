@@ -35,4 +35,6 @@ public interface GuildLogic
 	public ResultValue search(HttpRequestContext context) throws Exception;
 	
 	public ResultValue getStatData(HttpRequestContext context) throws Exception;
+	
+	public ResultValue setNeedAudit(HttpRequestContext context) throws Exception;
 }

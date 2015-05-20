@@ -134,6 +134,12 @@ public class RedisKey
 	public final static String CACHE_GUILD_CHECKIN_NUM_KEY_PREFIX = "cache_guild_checkin_num_";
 	
 	/**
+	 * 公会签到总数key前缀
+	 * 结构: cache_guild_checkin_total_num_{guildid}
+	 */
+	public final static String CACHE_GUILD_CHECKIN_TOTAL_NUM_KEY_PREFIX = "cache_guild_checkin_total_num_";
+	
+	/**
 	 * 公会列表结果缓存key前缀
 	 * 结构: cache_guild_list_{type}_{start}_{end}
 	 */

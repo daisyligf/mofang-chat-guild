@@ -19,6 +19,8 @@ public interface GuildDao
 	
 	public void updateStatus(long guildId, int status) throws Exception;
 	
+	public void setNeedAudit(long guildId, int needAudit) throws Exception;
+	
 	public Guild getInfo(long guildId) throws Exception;
 	
 	public long getCreatedCount(long userId) throws Exception;

@@ -108,13 +108,14 @@ public class GuildLogicImpl implements GuildLogic
 			String noticeOriginal = json.optString("notice", "");
 			String background = json.optString("background", "");
 			JSONArray games = json.getJSONArray("game_ids");
+			int needAudit = json.optInt("need_audit", 1);
 			
-    			if(null != games && games.length() > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
-    			{
-    				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
-    				result.setMessage(GlobalObject.GLOBAL_MESSAGE.OVER_GUILD_GAME_MAX_COUNT);
-    				return result;
-    			}
+			if(null != games && games.length() > GlobalConfig.MAX_GUILD_GAME_REF_COUNT)
+			{
+				result.setCode(ReturnCode.OVER_GUILD_GAME_MAX_COUNT);
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.OVER_GUILD_GAME_MAX_COUNT);
+				return result;
+			}
 			// 对公会名称、宣言、公告进行敏感词过滤
 			// guildName,intro,notice
 			JSONObject guildNameJson = SensitiveWordsComponent.filter(guildNameOriginal);
@@ -149,6 +150,7 @@ public class GuildLogicImpl implements GuildLogic
 			model.setHotSeq(0L);
 			model.setNewSeq(0L);
 			model.setCreateTime(new Date());
+			model.setNeedAudit(needAudit);
 			
 			lock.lock();
 			try 
@@ -244,6 +246,8 @@ public class GuildLogicImpl implements GuildLogic
 			String noticeOriginal = json.optString("notice", "");
 			String background = json.optString("background", "");
 			
+			int needAudit = json.optInt("need_audit", 1);
+			
 			// 对公会宣言、公告进行敏感词过滤
 			// intro，notice
 			JSONObject introJson = SensitiveWordsComponent.filter(introOriginal);
@@ -261,6 +265,7 @@ public class GuildLogicImpl implements GuildLogic
 			model.setNoticeOriginal(noticeOriginal);
 			model.setNoticeMark(noticeJson.optString("out_mark", ""));
 			model.setBackground(background);
+			model.setNeedAudit(needAudit);
 			
 			///编辑公会
 			guildService.edit(model);
@@ -883,6 +888,45 @@ public class GuildLogicImpl implements GuildLogic
 			int giftCount = GiftComponent.getGuildGiftCount(guildId);
 			json.put("gift_count", giftCount);
 			return json;
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
+	
+	public ResultValue setNeedAudit(HttpRequestContext context) throws Exception
+	{
+		ResultValue result = new ResultValue();
+		
+		String postData = context.getPostData();
+		if(StringUtil.isNullOrEmpty(postData))
+		{
+			result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
+			return result;
+		}
+		
+		try
+		{
+			JSONObject json = new JSONObject(postData);
+			long guildId = json.optLong("guild_id", 0);
+			
+			if (guildId <= 0)
+			{
+				result.setCode(ReturnCode.CLIENT_REQUEST_DATA_IS_INVALID);
+				result.setMessage(GlobalObject.GLOBAL_MESSAGE.CLIENT_REQUEST_DATA_IS_INVALID);
+				return result;
+			}
+			
+			int needAudit = json.optInt("need_audit", 1);
+			
+			guildService.setNeedAudit(guildId, needAudit);
+			
+			///返回结果
+			result.setCode(ReturnCode.SUCCESS);
+			result.setMessage(GlobalObject.GLOBAL_MESSAGE.SUCCESS);
+			return result;
 		}
 		catch(Exception e)
 		{

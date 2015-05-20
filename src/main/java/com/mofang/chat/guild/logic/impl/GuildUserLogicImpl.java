@@ -57,6 +57,7 @@ public class GuildUserLogicImpl implements GuildUserLogic
 	/**
 	 * 申请加入公会
 	 * 1. 加入公会成员中(状态: 待审核)
+	 * 修改
 	 */
 	@Override
 	public ResultValue join(HttpRequestContext context) throws Exception
@@ -164,7 +165,12 @@ public class GuildUserLogicImpl implements GuildUserLogic
 			model.setLastLoginTime(curdate);
 			
 			///异步执行申请加入公会操作
-			guildUserService.join(model);
+			guildUserService.join(model, guild);
+			
+			if (guild.getNeedAudit() == 0) 
+			{
+				guildUserService.audit(guild, userId, GuildUserAuditType.AUDIT_PASS);	
+			}
 			
 			///异步执行任务接口
 			taskExecComponent.exec(userId, TaskExecCode.JOIN_GUILD);

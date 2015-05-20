@@ -62,6 +62,8 @@ public class Guild
 	private Long newSeq;
 	@ColumnName(name="create_time")
 	private Date createTime;
+	@ColumnName(name="need_audit")
+	private Integer needAudit;
 	
 	public Long getGuildId()
 	{
@@ -277,6 +279,14 @@ public class Guild
 	{
 	    this.noticeMark = noticeMark;
 	}
+	
+	public Integer getNeedAudit() {
+		return needAudit;
+	}
+
+	public void setNeedAudit(Integer needAudit) {
+		this.needAudit = needAudit;
+	}
 
 	public JSONObject toJson()
 	{
@@ -305,6 +315,7 @@ public class Guild
 			json.put("hotSeq", hotSeq);
 			json.put("newSeq", newSeq);
 			json.put("createTime", createTime == null ? System.currentTimeMillis() : createTime.getTime());
+			json.put("need_audit", needAudit);
 			return json;
 		}
 		catch(Exception e)
@@ -341,6 +352,7 @@ public class Guild
 			model.setNewSeq(json.optLong("newSeq", 0));
 			long time = json.optLong("createTime", System.currentTimeMillis());
 			model.setCreateTime(new Date(time));
+			model.setNeedAudit(json.optInt("need_audit", 1));
 			return model;
 		}
 		catch(Exception e)

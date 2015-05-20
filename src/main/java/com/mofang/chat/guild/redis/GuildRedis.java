@@ -48,4 +48,6 @@ public interface GuildRedis
 	public long getMyCount(long userId) throws Exception;
 	
 	public long getRank(long guildId) throws Exception;
+
+	public boolean setNeedAudit(long guildId, int needAudit) throws Exception;
 }

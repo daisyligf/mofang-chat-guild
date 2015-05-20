@@ -63,7 +63,7 @@ public class GuildUserServiceImpl implements GuildUserService
 	}
 
 	@Override
-	public void join(final GuildUser model) throws Exception
+	public void join(final GuildUser model, final Guild guild) throws Exception
 	{
 		try
 		{
@@ -74,7 +74,12 @@ public class GuildUserServiceImpl implements GuildUserService
 			updateGuildUserListComponent.updateAll(model.getGuildId());
 			
 			///发送申请加入公会通知
-			NotifyPushComponent.applyGuild(model.getUserId(), model.getGuildId());
+			NotifyPushComponent.applyGuild(model.getUserId(), model.getGuildId(), guild.getNeedAudit());
+			
+//			if (guild.getNeedAudit() == 0)
+//			{
+//				NotifyPushComponent.joinGuild(model.getUserId(), model.getGuildId());
+//			}
 		}
 		catch(Exception e)
 		{

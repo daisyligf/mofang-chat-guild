@@ -13,7 +13,7 @@ import com.mofang.chat.guild.model.GuildUser;
  */
 public interface GuildUserService
 {
-	public void join(GuildUser model) throws Exception;
+	public void join(GuildUser model, Guild guild) throws Exception;
 	
 	public void changeRole(long guildId, long userId, int role) throws Exception;
 	
