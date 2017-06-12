@@ -1,2 +1,10 @@
-bin/
-*.class
+_Store
+*.DS_Store
+*.gitignore
+*.prefs
+*.classpath
+.tern-project
+.classpath
+/bin
+.idea/
+*.iml
